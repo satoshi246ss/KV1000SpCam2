@@ -115,7 +115,7 @@ namespace KV1000SpCam
     {
         public String rstr;
         public int rstr_f = 0;
-        public Udp() : this(7777) { }
+        delegate void dlgSetString(object lbl, string text);
 
         /// <summary>
         /// ポートを指定して初期化。
@@ -125,10 +125,10 @@ namespace KV1000SpCam
         {
             // UDP/IPで非同期データ受信するサンプル(C#.NET/VS2005)
             // UDP/IPソケット生成
-            UdpClient objSck = new UdpClient(port);
+  //          UdpClient objSck = new UdpClient(port);
 
             // UDP/IP受信コールバック設定(System.AsyncCallback)
-            objSck.BeginReceive(ReceiveCallback, objSck);
+  //          objSck.BeginReceive(ReceiveCallback, objSck);
         }
 
         /// <summary>
@@ -144,14 +144,23 @@ namespace KV1000SpCam
             //WriteLine(rstr);
             MessageBox.Show(rstr);
 
-            rstr = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + "受信したデータ:[" + rrstr + "]\n"; 
+            rstr = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + " R:[" + rrstr + "]\n"; 
             rstr_f = 1;
-            //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
+            //Invoke(new dlgSetString(ShowRText), new object[] { rtb, rstr });
+            MessageBox.Show(rstr);
 
             // 連続で(複数回)データ受信する為の再設定
             ((System.Net.Sockets.UdpClient)AR.AsyncState).BeginReceive(ReceiveCallback, AR.AsyncState);
         }
 
+        //デリゲートで別スレッドから呼ばれてラベルに現在の時間又は
+        //ストップウオッチの時間を表示する
+        private void ShowRText(object sender, string str)
+        {
+            RichTextBox rtb = (RichTextBox)sender;　//objectをキャストする
+            rtb.Focus();
+            rtb.AppendText(str);
+        }
 
         /// <summary>
         // 速度データをmmdeg整数化（KV-1000に送信用）
