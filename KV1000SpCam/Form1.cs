@@ -26,12 +26,14 @@ namespace KV1000SpCam
         FSI_PID_DATA pid_data = new FSI_PID_DATA();
         KV_PID_DATA kv_pid_data = new KV_PID_DATA();
         MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
-        int mmFsiUdpPortKV1000SpCam2  = 24410; //24426;            // MT3IDS （送信）
+        int mmFsiUdpPortKV1000SpCam2  = 24426; //24410;            // MT3IDS （送信）
+        int mmFsiUdpPortKV1000SpCam2s = 24427; //24426;            // MT3IDS （送信）
         int mmFsiUdpPortMTmonitor = 24415;
         string mmFsiCore_i5 = "192.168.1.211";
         int mmFsiUdpPortSpCam = 24410;   // SpCam（受信）
         string mmFsiSC440 = "192.168.1.206";
-        System.Net.Sockets.UdpClient udpc = null;
+        System.Net.Sockets.UdpClient udpc  = null;
+        System.Net.Sockets.UdpClient udpc2 = null;
         DriveInfo cDrive = new DriveInfo("C");
         long diskspace;
 
@@ -50,7 +52,8 @@ namespace KV1000SpCam
         private void Form1_Load(object sender, EventArgs e)
         {
             // ソケット生成
-            udpc = new System.Net.Sockets.UdpClient(mmFsiUdpPortKV1000SpCam2);
+            udpc  = new System.Net.Sockets.UdpClient(mmFsiUdpPortKV1000SpCam2);
+            udpc2 = new System.Net.Sockets.UdpClient(mmFsiUdpPortKV1000SpCam2s);
             // ソケット非同期受信(System.AsyncCallback)
             udpc.BeginReceive(ReceiveCallback, udpc);
 
@@ -62,6 +65,7 @@ namespace KV1000SpCam
             timeBeginPeriod(16);
             // ソケットクローズ
             udpc.Close();
+            udpc2.Close();
         }
 
         #region UDP
@@ -149,7 +153,8 @@ namespace KV1000SpCam
             {
                 idd++;
                 //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, idd });
-                Pid_Data_Send_KV1000((short)-(short)((i & 32767)),  + i / 1000.0,  - i / 1000.0); // 32767 == 7FFF
+                Pid_Data_Set_Wide((short)-(short)((i & 32767)),  + i / 1000.0,  - i / 1000.0); // 32767 == 7FFF
+                Pid_Data_Send_KV1000(); 
                 //Pid_Data_Send_cmd_KV1000((short)-(short)((idd & 32767)), 32.765 + i / 1000.0, -32.765 - i / 1000.0); // 32767 == 7FFF
                 System.Threading.Thread.Sleep(40);
             }
@@ -164,9 +169,19 @@ namespace KV1000SpCam
 
         private void timer_udp_Tick(object sender, EventArgs e)
         {
-            ++id;
-            label_x2pos.Text = id.ToString();
-            
+            Pid_Data_Send_KV1000();            
+        }
+
+        private void button_UDP_on_Click(object sender, EventArgs e)
+        {
+            if (timer_udp.Enabled == true)
+            {
+                timer_udp.Enabled = false;
+            }
+            else
+            {
+                timer_udp.Enabled = true;
+            }
         }
     }
 }
