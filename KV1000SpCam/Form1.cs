@@ -21,14 +21,12 @@ namespace KV1000SpCam
         int id=0;
         string cmd_str ="RD DM11390" ;
         int cmd_str_f = 0 ;
-        Udp udpkv = new Udp(24427);
         String udp_r;
 
         FSI_PID_DATA pid_data = new FSI_PID_DATA();
         KV_PID_DATA kv_pid_data = new KV_PID_DATA();
         MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
-        int mmFsiUdpPortKV1000SpCam2r = 24427;            // MT3IDS （受信） ブロードキャストのため不使用
-        int mmFsiUdpPortKV1000SpCam2  = 24426;            // MT3IDS （送信）
+        int mmFsiUdpPortKV1000SpCam2  = 24410; //24426;            // MT3IDS （送信）
         int mmFsiUdpPortMTmonitor = 24415;
         string mmFsiCore_i5 = "192.168.1.211";
         int mmFsiUdpPortSpCam = 24410;   // SpCam（受信）
@@ -73,7 +71,7 @@ namespace KV1000SpCam
             BackgroundWorker bw = (BackgroundWorker)sender;
 
             //バインドするローカルポート番号
-            int localPort = mmFsiUdpPortKV1000SpCam2r; //  24410;// broadcast mmFsiUdpPortMT3IDS2;
+            int localPort = mmFsiUdpPortKV1000SpCam2; //  24410;// broadcast mmFsiUdpPortMT3IDS2;
             System.Net.Sockets.UdpClient udpc = null; ;
             try
             {
@@ -157,7 +155,7 @@ namespace KV1000SpCam
             }
             sw.Stop();
             long millisec = sw.ElapsedMilliseconds;
-            this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, millisec.ToString() });
+            this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, millisec.ToString()+"ms\n" });
 
             Pid_Data_Send_cmd_KV1000((short)( 100 ), 32.765 , -32.765 ); // 32767 == 7FFF
 
@@ -167,16 +165,8 @@ namespace KV1000SpCam
         private void timer_udp_Tick(object sender, EventArgs e)
         {
             ++id;
-            label1.Text = id.ToString();
-            if( udpkv.rstr_f != 0 ){
-              //  this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, udpkv.rstr });
-                richTextBox1.Focus();
-                richTextBox1.AppendText( udpkv.rstr);
- 
-                udpkv.rstr_f = 0;
-            }
+            label_x2pos.Text = id.ToString();
+            
         }
-
-
     }
 }

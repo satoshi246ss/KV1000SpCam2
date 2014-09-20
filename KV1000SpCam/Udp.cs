@@ -113,9 +113,7 @@ namespace KV1000SpCam
     /// <typeparam name="T">要素の型</typeparam>
     public class Udp
     {
-        public String rstr;
-        public int rstr_f = 0;
-        delegate void dlgSetString(object lbl, string text);
+        public int x2pos, y2pos, x2v, y2v;
 
         /// <summary>
         /// ポートを指定して初期化。
@@ -141,25 +139,12 @@ namespace KV1000SpCam
             System.Net.IPEndPoint ipAny = new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
             Byte[] rdat = ((System.Net.Sockets.UdpClient)AR.AsyncState).EndReceive(AR, ref ipAny);
             String rrstr =  System.Text.Encoding.GetEncoding("SHIFT-JIS").GetString(rdat);
-            //WriteLine(rstr);
-            MessageBox.Show(rstr);
 
-            rstr = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + " R:[" + rrstr + "]\n"; 
-            rstr_f = 1;
-            //Invoke(new dlgSetString(ShowRText), new object[] { rtb, rstr });
+            string rstr = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + " R:[" + rrstr + "]\n"; 
             MessageBox.Show(rstr);
 
             // 連続で(複数回)データ受信する為の再設定
             ((System.Net.Sockets.UdpClient)AR.AsyncState).BeginReceive(ReceiveCallback, AR.AsyncState);
-        }
-
-        //デリゲートで別スレッドから呼ばれてラベルに現在の時間又は
-        //ストップウオッチの時間を表示する
-        private void ShowRText(object sender, string str)
-        {
-            RichTextBox rtb = (RichTextBox)sender;　//objectをキャストする
-            rtb.Focus();
-            rtb.AppendText(str);
         }
 
         /// <summary>
@@ -233,10 +218,10 @@ namespace KV1000SpCam
         /// <remarks>
         /// Set save dir name
         /// </remarks>
-        public void set_udp_kv_data(byte[] bytes)
+        public void set_udp_kv_data(byte[] bytes, ref KV_DATA kd)
         {
             GCHandle gch = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-     //       kd = (KV_DATA)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(KV_DATA));
+            kd = (KV_DATA)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(KV_DATA));
             gch.Free();
         }
 
@@ -271,5 +256,59 @@ namespace KV1000SpCam
             Array.Reverse(bytes);
             return BitConverter.ToUInt16(bytes, 0);
         }
+
+
+        #region cal_MT3
+        /// <summary>
+        /// MT3 dataの計算
+        /// </summary>
+        /// <remarks>
+        /// KV_DATA -> az,alt etcに変換
+        /// </remarks>
+        public void cal_mt3(KV_DATA kd)
+        {
+            x2pos = (kd.xx2 << 16) + (kd.xx1 << 8) + kd.xx0; // <<16 ->256*256  <<8 ->256
+            y2pos = (kd.yy2 << 16) + (kd.yy1 << 8) + kd.yy0; // <<16 ->256*256  <<8 ->256
+            x2v = ((kd.v21 << 8) + kd.v20) << 6;
+            y2v = ((kd.v23 << 8) + kd.v22) << 6;
+/*
+            kv_status = (UInt16)((kd.y3 << 8) + kd.y2);      //KV1000 DM503
+            data_request = (UInt16)((kd.x3 << 8) + kd.x2);   //KV1000 DM499
+            binStr_status = Convert.ToString(kv_status, 2);
+            binStr_request = Convert.ToString(data_request, 2);
+            Pos2AzAlt2();
+
+            mt3mode = (short)((data_request & (1 << 4)) >> 4); //Set MT3Region(0=mmWest,1=mmEast)
+            if ((int)(kv_status & (1 << 10)) != 0) vaz2_kv = +x2v / 1000.0; // MR106 on:+
+            else vaz2_kv = -x2v / 1000.0;
+            if ((int)(kv_status & (1 << 11)) != 0)
+            { //mr107:Y2モータ回転方向
+                if (mt3mode == mmEast) valt2_kv = -y2v / 1000.0;
+                else valt2_kv = y2v / 1000.0;
+            }
+            else
+            {
+                if (mt3mode == mmEast) valt2_kv = y2v / 1000.0;
+                else valt2_kv = -y2v / 1000.0;
+            }
+
+            mt3state_move_pre = mt3state_move;
+            mt3state_truck_pre = mt3state_truck;
+            mt3state_center_pre = mt3state_center;
+            mt3state_night_pre = mt3state_night;
+
+            mt3state_move = (kv_status & (1 << 12)); //導入中フラグ
+            mt3state_truck = (kv_status & (1 << 13)); //追尾中フラグ
+            mt3state_night = (kv_status & (1 << 14)); //夜間フラグ
+            mt3state_center = (data_request & (1 << 2)); //センタリング中フラグ
+
+            // truck開始時
+            if (mt3state_truck_pre == 0 && mt3state_truck != 0) kalman_init_flag = 1;
+
+            // センタリング中 完了時
+            if (mt3state_center_pre != 0 && mt3state_center == 0) kalman_init_flag = 1;
+*/
+        }
+        #endregion
     }
 }
