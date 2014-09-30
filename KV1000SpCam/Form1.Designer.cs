@@ -50,6 +50,13 @@
             this.label_sf_daz = new System.Windows.Forms.Label();
             this.label_sf_f = new System.Windows.Forms.Label();
             this.button_UDP_on = new System.Windows.Forms.Button();
+            this.button_px = new System.Windows.Forms.Button();
+            this.button_mx = new System.Windows.Forms.Button();
+            this.button_py = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.button_my = new System.Windows.Forms.Button();
+            this.label_UdpSendData = new System.Windows.Forms.Label();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_test
@@ -75,7 +82,8 @@
             // 
             // timer_udp
             // 
-            this.timer_udp.Interval = 40;
+            this.timer_udp.Enabled = true;
+            this.timer_udp.Interval = 13;
             this.timer_udp.Tick += new System.EventHandler(this.timer_udp_Tick);
             // 
             // label_x2pos
@@ -243,11 +251,80 @@
             this.button_UDP_on.UseVisualStyleBackColor = false;
             this.button_UDP_on.Click += new System.EventHandler(this.button_UDP_on_Click);
             // 
+            // button_px
+            // 
+            this.button_px.Font = new System.Drawing.Font("MS UI Gothic", 8F);
+            this.button_px.Location = new System.Drawing.Point(0, 19);
+            this.button_px.Name = "button_px";
+            this.button_px.Size = new System.Drawing.Size(26, 21);
+            this.button_px.TabIndex = 20;
+            this.button_px.Text = "+X";
+            this.button_px.UseVisualStyleBackColor = true;
+            this.button_px.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_px_MouseDown);
+            this.button_px.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button_px_MouseUp);
+            // 
+            // button_mx
+            // 
+            this.button_mx.Font = new System.Drawing.Font("MS UI Gothic", 8F);
+            this.button_mx.Location = new System.Drawing.Point(56, 19);
+            this.button_mx.Name = "button_mx";
+            this.button_mx.Size = new System.Drawing.Size(26, 21);
+            this.button_mx.TabIndex = 21;
+            this.button_mx.Text = "-X";
+            this.button_mx.UseVisualStyleBackColor = true;
+            this.button_mx.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_mx_MouseDown);
+            this.button_mx.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button_mx_MouseUp);
+            // 
+            // button_py
+            // 
+            this.button_py.Font = new System.Drawing.Font("MS UI Gothic", 8F);
+            this.button_py.Location = new System.Drawing.Point(28, 0);
+            this.button_py.Name = "button_py";
+            this.button_py.Size = new System.Drawing.Size(26, 21);
+            this.button_py.TabIndex = 22;
+            this.button_py.Text = "+Y";
+            this.button_py.UseVisualStyleBackColor = true;
+            this.button_py.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_py_MouseDown);
+            this.button_py.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button_py_MouseUp);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.button_my);
+            this.panel1.Controls.Add(this.button_mx);
+            this.panel1.Controls.Add(this.button_py);
+            this.panel1.Controls.Add(this.button_px);
+            this.panel1.Location = new System.Drawing.Point(411, 12);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(82, 61);
+            this.panel1.TabIndex = 23;
+            // 
+            // button_my
+            // 
+            this.button_my.Font = new System.Drawing.Font("MS UI Gothic", 8F);
+            this.button_my.Location = new System.Drawing.Point(28, 40);
+            this.button_my.Name = "button_my";
+            this.button_my.Size = new System.Drawing.Size(26, 21);
+            this.button_my.TabIndex = 23;
+            this.button_my.Text = "-Y";
+            this.button_my.UseVisualStyleBackColor = true;
+            this.button_my.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_my_MouseDown);
+            this.button_my.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button_my_MouseUp);
+            // 
+            // label_UdpSendData
+            // 
+            this.label_UdpSendData.AutoSize = true;
+            this.label_UdpSendData.Location = new System.Drawing.Point(13, 90);
+            this.label_UdpSendData.Name = "label_UdpSendData";
+            this.label_UdpSendData.Size = new System.Drawing.Size(50, 12);
+            this.label_UdpSendData.TabIndex = 24;
+            this.label_UdpSendData.Text = "UDPdata";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(505, 226);
+            this.Controls.Add(this.label_UdpSendData);
             this.Controls.Add(this.button_UDP_on);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label_sf_dalt);
@@ -268,10 +345,12 @@
             this.Controls.Add(this.label_x2pos);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.button_test);
+            this.Controls.Add(this.panel1);
             this.Name = "Form1";
-            this.Text = "KV1000SpCam_2";
+            this.Text = "KV1000SpCam_2   (192.168.1.204:24426)";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -300,6 +379,12 @@
         private System.Windows.Forms.Label label_sf_daz;
         private System.Windows.Forms.Label label_sf_f;
         private System.Windows.Forms.Button button_UDP_on;
+        private System.Windows.Forms.Button button_px;
+        private System.Windows.Forms.Button button_mx;
+        private System.Windows.Forms.Button button_py;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button_my;
+        private System.Windows.Forms.Label label_UdpSendData;
     }
 }
 

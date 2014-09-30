@@ -76,25 +76,29 @@ namespace KV1000SpCam
         public Byte xx1, xx0, xx3, xx2;   //unsigned char  x2pos 
         public Byte yy1, yy0, yy3, yy2;   //unsigned char  y2pos 
         public Byte v11, v10, v13, v12;   //unsigned short x1v, y1v 
-        public Byte v21, v20, v23, v22;   //unsigned short x2v, y2v 
+        public Byte v21, v20, v23, v22;   //unsigned short x2v, y2v
+        public UInt16 UdpTimeCode;   //unsigned short x2v, y2v
         //public UInt16 x1v, y1v, x2v, y2v;    //unsigned short v
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct KV_PID_DATA
     {
-        public Int16 wide_id;       // [+-ID]  wide ID
-        public Int16 wide_az;       // [mmdeg] wide位置(方位方向)　重心位置
-        public Int16 wide_alt;      // [mmdeg] wide位置(高度方向)　重心位置
-        public Int16 fine_id;       // [+-ID]  fine ID
-        public Int16 fine_az;       // [mmdeg] wide位置(方位方向)　重心位置
-        public Int16 fine_alt;      // [mmdeg] wide位置(高度方向)　重心位置
-        public Int16 sf_id;         // [+-ID]  sf ID
-        public Int16 sf_az;         // [mmdeg] wide位置(方位方向)　重心位置
-        public Int16 sf_alt;        // [mmdeg] wide位置(高度方向)　重心位置
-        public Int16 fish_id;       // [+-ID]  fish ID
-        public Int16 fish_vaz;      // [mmdeg/s] 速度推定値(方位方向)　カルマンフィルタ
-        public Int16 fish_valt;     // [mmdeg/s] 速度推定値(高度方向)　カルマンフィルタ
+        public Int16 wide_time;     // 12[time code] wide Udp time code [ms]
+        public Int16 wide_id;       // 34[+-ID]  wide ID
+        public Int16 wide_az;       // 56[mmdeg] wide位E置u(方u位E方u向u)　@重d心S位E置u
+        public Int16 wide_alt;      // 78[mmdeg] wide位E置u(高?度x方u向u)　@重d心S位E置u
+        public Int16 fine_time;     // 90[time code] fine Udp time code [ms]
+        public Int16 fine_id;       // 12[+-ID]  fine ID
+        public Int16 fine_az;       // 34[mmdeg] wide位E置u(方u位E方u向u)　@重d心S位E置u
+        public Int16 fine_alt;      // 56[mmdeg] wide位E置u(高?度x方u向u)　@重d心S位E置u
+        public Int16 sf_time;       // 78[time code] sf Udp time code [ms]
+        public Int16 sf_id;         // 90[+-ID]  sf ID
+        public Int16 sf_az;         // 12[mmdeg] wide位E置u(方u位E方u向u)　@重d心S位E置u
+        public Int16 sf_alt;        // 34[mmdeg] wide位E置u(高?度x方u向u)　@重d心S位E置u
+        public Int16 fish_id;       // 56[+-ID]  fish ID
+        public Int16 fish_vaz;      // 78[mmdeg/s] 速・ﾊ度x推?定e値l(方u位E方u向u)　@カJル?マ
+        public Int16 fish_valt;     // 90[mmdeg/s] 速・ﾊ度x推?定e値l(方u位E方u向u)　@カJル?マ
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -114,6 +118,7 @@ namespace KV1000SpCam
     public class Udp
     {
         public int x2pos, y2pos, x2v, y2v;
+        public UInt16 udp_time_code;
 
         /// <summary>
         /// ポートを指定して初期化。
@@ -215,13 +220,20 @@ namespace KV1000SpCam
         /// <summary>
         /// udp dataを取り込む。
         /// </summary>
-        /// <remarks>
-        /// Set save dir name
-        /// </remarks>
         public void set_udp_kv_data(byte[] bytes, ref KV_DATA kd)
         {
             GCHandle gch = GCHandle.Alloc(bytes, GCHandleType.Pinned);
             kd = (KV_DATA)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(KV_DATA));
+            gch.Free();
+        }
+
+        /// <summary>
+        /// udp pid_dataを取り込む。
+        /// </summary>
+         public void set_udp_pid_data(byte[] bytes, ref KV_PID_DATA kpd)
+        {
+            GCHandle gch = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+            kpd = (KV_PID_DATA)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(KV_PID_DATA));
             gch.Free();
         }
 
@@ -271,6 +283,7 @@ namespace KV1000SpCam
             y2pos = (kd.yy2 << 16) + (kd.yy1 << 8) + kd.yy0; // <<16 ->256*256  <<8 ->256
             x2v = ((kd.v21 << 8) + kd.v20) << 6;
             y2v = ((kd.v23 << 8) + kd.v22) << 6;
+            udp_time_code = EndianChange(kd.UdpTimeCode);
 /*
             kv_status = (UInt16)((kd.y3 << 8) + kd.y2);      //KV1000 DM503
             data_request = (UInt16)((kd.x3 << 8) + kd.x2);   //KV1000 DM499
