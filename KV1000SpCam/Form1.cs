@@ -15,6 +15,12 @@ namespace KV1000SpCam
 {
     public partial class Form1 : Form
     {
+        //観測時間帯を表す定数
+        const int Daytime   = 0;
+        const int Nighttime = 1;
+        //上の状態を保持します
+        int States = 0;
+
         Stopwatch sw = new Stopwatch();
         long elapsed0 = 0, elapsed1 = 0, elapsed2 = 0;
         double lap0 = 0, lap1 = 0, lap2 = 0, alpha = 0.01;
@@ -202,10 +208,6 @@ namespace KV1000SpCam
 
         }
 
- //       private void timer_udp_send_data_Tick(object sender, EventArgs e)
- //       {
- //       }
-
         private void button_UDP_on_Click(object sender, EventArgs e)
         {
             if (timer_udp.Enabled == true)
@@ -264,6 +266,32 @@ namespace KV1000SpCam
         {
             string s1 = string.Format("RS 01215\r");
             Send_R_ON_cmd_KV1000(s1);
+        }
+
+        // 観測時間にfine起動
+        private void timerObsOnOff_Tick(object sender, EventArgs e)
+        {
+            TimeSpan nowtime = DateTime.Now - DateTime.Today;
+            TimeSpan endtime = new TimeSpan(7, 0, 0);
+            TimeSpan starttime = new TimeSpan(14,21, 0); //17 3 0
+
+            if (nowtime.CompareTo(endtime) >= 0 && nowtime.CompareTo(starttime) <= 0)
+            {
+                // DayTime
+                if (this.States == Daytime && checkBoxObsAuto.Checked)
+                {
+                }
+                this.States = Daytime;
+            }
+            else
+            {
+                //NightTime
+                if (this.States == Daytime && checkBoxObsAuto.Checked)
+                {
+                    System.Diagnostics.Process p = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2010\Projects\MT3Fine\PictureViewer\bin\Release\MT3Fine.exe""");
+                }
+                this.States = Nighttime;
+            }
         }
 
      }

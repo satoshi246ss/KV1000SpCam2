@@ -56,6 +56,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.button_my = new System.Windows.Forms.Button();
             this.label_UdpSendData = new System.Windows.Forms.Label();
+            this.timerObsOnOff = new System.Windows.Forms.Timer(this.components);
+            this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -319,11 +321,30 @@
             this.label_UdpSendData.TabIndex = 24;
             this.label_UdpSendData.Text = "UDPdata";
             // 
+            // timerObsOnOff
+            // 
+            this.timerObsOnOff.Enabled = true;
+            this.timerObsOnOff.Interval = 10000;
+            this.timerObsOnOff.Tick += new System.EventHandler(this.timerObsOnOff_Tick);
+            // 
+            // checkBoxObsAuto
+            // 
+            this.checkBoxObsAuto.AutoSize = true;
+            this.checkBoxObsAuto.Checked = true;
+            this.checkBoxObsAuto.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxObsAuto.Location = new System.Drawing.Point(15, 56);
+            this.checkBoxObsAuto.Name = "checkBoxObsAuto";
+            this.checkBoxObsAuto.Size = new System.Drawing.Size(80, 16);
+            this.checkBoxObsAuto.TabIndex = 25;
+            this.checkBoxObsAuto.Text = "checkBox1";
+            this.checkBoxObsAuto.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(505, 226);
+            this.Controls.Add(this.checkBoxObsAuto);
             this.Controls.Add(this.label_UdpSendData);
             this.Controls.Add(this.button_UDP_on);
             this.Controls.Add(this.label9);
@@ -385,6 +406,8 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button button_my;
         private System.Windows.Forms.Label label_UdpSendData;
+        private System.Windows.Forms.Timer timerObsOnOff;
+        private System.Windows.Forms.CheckBox checkBoxObsAuto;
     }
 }
 
