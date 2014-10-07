@@ -88,17 +88,20 @@ namespace KV1000SpCam
         public Int16 wide_id;       // 34[+-ID]  wide ID
         public Int16 wide_az;       // 56[mmdeg] wide位E置u(方u位E方u向u)　@重d心S位E置u
         public Int16 wide_alt;      // 78[mmdeg] wide位E置u(高?度x方u向u)　@重d心S位E置u
-        public Int16 fine_time;     // 90[time code] fine Udp time code [ms]
-        public Int16 fine_id;       // 12[+-ID]  fine ID
-        public Int16 fine_az;       // 34[mmdeg] wide位E置u(方u位E方u向u)　@重d心S位E置u
-        public Int16 fine_alt;      // 56[mmdeg] wide位E置u(高?度x方u向u)　@重d心S位E置u
-        public Int16 sf_time;       // 78[time code] sf Udp time code [ms]
-        public Int16 sf_id;         // 90[+-ID]  sf ID
-        public Int16 sf_az;         // 12[mmdeg] wide位E置u(方u位E方u向u)　@重d心S位E置u
-        public Int16 sf_alt;        // 34[mmdeg] wide位E置u(高?度x方u向u)　@重d心S位E置u
-        public Int16 fish_id;       // 56[+-ID]  fish ID
-        public Int16 fish_vaz;      // 78[mmdeg/s] 速・ﾊ度x推?定e値l(方u位E方u向u)　@カJル?マ
-        public Int16 fish_valt;     // 90[mmdeg/s] 速・ﾊ度x推?定e値l(方u位E方u向u)　@カJル?マ
+        public Int16 wide_vk;       // 90[pix/fr] wide velosity(kalman filter sqrt(vx2+vy2)
+        public Int16 fine_time;     // 12[time code] fine Udp time code [ms]
+        public Int16 fine_id;       // 34[+-ID]   fine ID
+        public Int16 fine_az;       // 56[mmdeg]  fine 位E置u(方u位E方u向u)　@重d心S位E置u
+        public Int16 fine_alt;      // 78[mmdeg]  fine 位E置u(高?度x方u向u)　@重d心S位E置u
+        public Int16 fine_vk;       // 90[pix/fr] fine velosity(kalman filter sqrt(vx2+vy2)
+        public Int16 sf_time;       // 12[time code] sf Udp time code [ms]
+        public Int16 sf_id;         // 34[+-ID]   sf ID
+        public Int16 sf_az;         // 56[mmdeg]  sf 位E置u(方u位E方u向u)　@重d心S位E置u
+        public Int16 sf_alt;        // 78[mmdeg]  sf 位E置u(高?度x方u向u)　@重d心S位E置u
+        public Int16 sf_vk;         // 90[pix/fr] sf velosity(kalman filter sqrt(vx2+vy2)
+        public Int16 fish_id;       // 12[+-ID]  fish ID
+        public Int16 fish_vaz;      // 34[mmdeg/s] 速・ﾊ度x推?定e値l(方u位E方u向u)　@カJル?マ
+        public Int16 fish_valt;     // 56[mmdeg/s] 速・ﾊ度x推?定e値l(方u位E方u向u)　@カJル?マ
     }
 
     [StructLayout(LayoutKind.Sequential)]

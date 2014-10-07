@@ -162,7 +162,7 @@ namespace KV1000SpCam
             {
                 idd++;
                 //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, idd });
-                Pid_Data_Set_Wide((short)-(short)((i & 32767)),  + i / 1000.0,  - i / 1000.0); // 32767 == 7FFF
+                Pid_Data_Set_Wide((short)-(short)((i & 32767)),  + i / 1000.0,  - i / 1000.0, 1.234); // 32767 == 7FFF
                 int j = i % 3;
                 if (j == 0) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
                 if (j == 1) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
@@ -268,12 +268,14 @@ namespace KV1000SpCam
             Send_R_ON_cmd_KV1000(s1);
         }
 
-        // 観測時間にfine起動
+        /// <summary>
+        /// 観測時間にfine起動
+        /// </summary>
         private void timerObsOnOff_Tick(object sender, EventArgs e)
         {
             TimeSpan nowtime = DateTime.Now - DateTime.Today;
             TimeSpan endtime = new TimeSpan(7, 0, 0);
-            TimeSpan starttime = new TimeSpan(14,21, 0); //17 3 0
+            TimeSpan starttime = new TimeSpan(18,05, 0); //17 3 0
 
             if (nowtime.CompareTo(endtime) >= 0 && nowtime.CompareTo(starttime) <= 0)
             {

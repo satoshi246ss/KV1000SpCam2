@@ -10,8 +10,8 @@ namespace KV1000SpCam
 {
     public partial class Form1 : Form
     {
-        string KV_remoteHost = "192.168.1.10"; // KV1000;
-        int KV_remotePort = 8503;  // 8503 UDP  8501 CMD
+//        string KV_remoteHost = "192.168.1.10"; // KV1000;
+//        int KV_remotePort = 8503;  // 8503 UDP  8501 CMD
         KV_DATA kd = new KV_DATA();
         Udp udpkv = new Udp(7777);
 
@@ -42,11 +42,11 @@ namespace KV1000SpCam
             System.Net.IPEndPoint ipAny = new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
             Byte[] rdat = ((System.Net.Sockets.UdpClient)AR.AsyncState).EndReceive(AR, ref ipAny);
 
-            // KV_DATA
+/*            // KV_DATA
             if (ipAny.Address.ToString() == KV_remoteHost && ipAny.Port == KV_remotePort && rdat.Length == Marshal.SizeOf(kd))
             {
                 // data 転送
-               /* string remoteHost = "192.168.1.204";
+                string remoteHost = "192.168.1.204";
                 int remotePort = 24411; //Fine
                 udpc2.Send(rdat, rdat.Length, remoteHost, remotePort);
 
@@ -55,6 +55,9 @@ namespace KV1000SpCam
                 udpc2.Send(rdat, rdat.Length, remoteHost, remotePort);
 */
 
+             // KV_DATA from local
+            if (ipAny.Address.ToString() == "127.0.0.1" && rdat.Length == Marshal.SizeOf(kd))
+            {
                 udpkv.set_udp_kv_data(rdat, ref kd);
                 udpkv.cal_mt3(kd);
                 Invoke(new dlgSetString(ShowLabelText), new object[] { label_x2pos, udpkv.x2pos.ToString() });
@@ -72,7 +75,7 @@ namespace KV1000SpCam
             else // それ以外
             {
                 String rrstr = System.Text.Encoding.GetEncoding("SHIFT-JIS").GetString(rdat);
-                string s = "R:" + ipAny.Address + "(" + ipAny.Port.ToString() + ")";
+                string s = "R:(" + rdat.Length +")"+ ipAny.Address + "(" + ipAny.Port.ToString() + ")";
                 rstr = LogString(rrstr, s);
                 Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, rstr });
                 //MessageBox.Show(rstr);
@@ -97,39 +100,59 @@ namespace KV1000SpCam
             {
                 kv_pid_data.wide_time = kpdr.wide_time;
                 kv_pid_data.wide_id   = kpdr.wide_id;
-                kv_pid_data.wide_az = kpdr.wide_az;
-                kv_pid_data.wide_alt = kpdr.wide_alt;
+                kv_pid_data.wide_az   = kpdr.wide_az;
+                kv_pid_data.wide_alt  = kpdr.wide_alt;
+                kv_pid_data.wide_vk   = kpdr.wide_vk;
             }
             if (kpdr.fine_id != 0)
             {
                 kv_pid_data.fine_time = kpdr.fine_time;
-                kv_pid_data.fine_id = kpdr.fine_id;
-                kv_pid_data.fine_az = kpdr.fine_az;
-                kv_pid_data.fine_alt = kpdr.fine_alt;
+                kv_pid_data.fine_id   = kpdr.fine_id;
+                kv_pid_data.fine_az   = kpdr.fine_az;
+                kv_pid_data.fine_alt  = kpdr.fine_alt;
+                kv_pid_data.fine_vk   = kpdr.fine_vk;
             }
             if (kpdr.sf_id != 0)
             {
                 kv_pid_data.sf_time = kpdr.sf_time;
-                kv_pid_data.sf_id = kpdr.sf_id;
-                kv_pid_data.sf_az = kpdr.sf_az;
-                kv_pid_data.sf_alt = kpdr.sf_alt;
+                kv_pid_data.sf_id   = kpdr.sf_id;
+                kv_pid_data.sf_az   = kpdr.sf_az;
+                kv_pid_data.sf_alt  = kpdr.sf_alt;
+                kv_pid_data.sf_vk   = kpdr.sf_vk;
             }
         }
-        
+
         /// <summary>
-        /// PID data送信データセット
+        /// PID data送信データセット(for test)
         /// </summary>
-        private void Pid_Data_Set_Wide(short id, double daz, double dalt)
+        private void Pid_Data_Set_Wide(short id, double daz, double dalt, double vk)
         {
             //送信するデータを読み込む
-            kv_pid_data.wide_time = udpkv.EndianChange((short)udpkv.udp_time_code); 
+            kv_pid_data.wide_time = udpkv.EndianChange((short)udpkv.udp_time_code);
             kv_pid_data.wide_id = udpkv.EndianChange(id);
             kv_pid_data.wide_az = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
             kv_pid_data.wide_alt = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
+            kv_pid_data.wide_vk = udpkv.EndianChange(udpkv.PIDPV_makedata(vk));
 
             label_wide_f.Text = kv_pid_data.wide_id.ToString() + " " + kv_pid_data.wide_time.ToString("00000");
-            label_wide_daz.Text  = kv_pid_data.wide_az.ToString();
+            label_wide_daz.Text = kv_pid_data.wide_az.ToString();
             label_wide_dalt.Text = kv_pid_data.wide_alt.ToString();
+        }
+        /// <summary>
+        /// PID data送信データセット
+        /// </summary>
+        private void Pid_Data_Set_Fine(short id, double daz, double dalt, double vk)
+        {
+            //送信するデータを読み込む
+            kv_pid_data.fine_time = udpkv.EndianChange((short)udpkv.udp_time_code); 
+            kv_pid_data.fine_id   = udpkv.EndianChange(id);
+            kv_pid_data.fine_az   = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
+            kv_pid_data.fine_alt  = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
+            kv_pid_data.fine_vk   = udpkv.EndianChange(udpkv.PIDPV_makedata(vk));
+
+            label_fine_f.Text    = kv_pid_data.fine_id.ToString() + " " + kv_pid_data.fine_time.ToString("00000");
+            label_fine_daz.Text  = kv_pid_data.fine_az.ToString();
+            label_fine_dalt.Text = kv_pid_data.fine_alt.ToString();
         }
         /// <summary>
         /// PID data送信ルーチン(KV1000 UDPバイナリ)
@@ -155,7 +178,7 @@ namespace KV1000SpCam
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
             }
             string s = "S:" + remoteHost + "(" + remotePort.ToString() + ")";
-            string s1 = kv_pid_data.wide_id.ToString() + " " + kv_pid_data.wide_az.ToString() + " " + kv_pid_data.wide_alt.ToString();
+            string s1 = kv_pid_data.wide_id.ToString() + " " + kv_pid_data.wide_az.ToString() + " " + kv_pid_data.wide_alt.ToString()+" " + kv_pid_data.wide_vk.ToString();
             string s2 = LogString(s1, s);
             this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_UdpSendData, s2 });
             //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
