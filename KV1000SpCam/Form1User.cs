@@ -69,8 +69,8 @@ namespace KV1000SpCam
             {
                 udpkv.set_udp_pid_data(rdat, ref kv_pid_data_r);
                 Pid_Data_Set(kv_pid_data_r);
-                udp_send_on = 1; // pid data 送信実行
                 udp_id_next = udp_id + 50;
+                udp_send_on = 1; // pid data 送信実行
             }
             else // それ以外
             {
@@ -134,25 +134,44 @@ namespace KV1000SpCam
             kv_pid_data.wide_alt = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
             kv_pid_data.wide_vk = udpkv.EndianChange(udpkv.PIDPV_makedata(vk));
 
-            label_wide_f.Text = kv_pid_data.wide_id.ToString() + " " + kv_pid_data.wide_time.ToString("00000");
-            label_wide_daz.Text = kv_pid_data.wide_az.ToString();
-            label_wide_dalt.Text = kv_pid_data.wide_alt.ToString();
+            label_wide_f.Text = id.ToString("00000") + " " + ((short)udpkv.udp_time_code).ToString("00000");
+            label_wide_daz.Text  = udpkv.PIDPV_makedata(daz).ToString();
+            label_wide_dalt.Text = udpkv.PIDPV_makedata(dalt).ToString();
+            label_wide_vk.Text   = udpkv.PIDPV_makedata(vk).ToString();
         }
         /// <summary>
-        /// PID data送信データセット
+        /// PID data送信データセット(fine)
         /// </summary>
         private void Pid_Data_Set_Fine(short id, double daz, double dalt, double vk)
         {
             //送信するデータを読み込む
-            kv_pid_data.fine_time = udpkv.EndianChange((short)udpkv.udp_time_code); 
-            kv_pid_data.fine_id   = udpkv.EndianChange(id);
-            kv_pid_data.fine_az   = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
-            kv_pid_data.fine_alt  = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
-            kv_pid_data.fine_vk   = udpkv.EndianChange(udpkv.PIDPV_makedata(vk));
+            kv_pid_data.fine_time = udpkv.EndianChange((short)udpkv.udp_time_code);
+            kv_pid_data.fine_id = udpkv.EndianChange(id);
+            kv_pid_data.fine_az = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
+            kv_pid_data.fine_alt = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
+            kv_pid_data.fine_vk = udpkv.EndianChange(udpkv.PIDPV_makedata(vk));
 
-            label_fine_f.Text    = kv_pid_data.fine_id.ToString() + " " + kv_pid_data.fine_time.ToString("00000");
-            label_fine_daz.Text  = kv_pid_data.fine_az.ToString();
-            label_fine_dalt.Text = kv_pid_data.fine_alt.ToString();
+            label_fine_f.Text = id.ToString("00000") + " " + ((short)udpkv.udp_time_code).ToString("00000");
+            label_fine_daz.Text  = udpkv.PIDPV_makedata(daz).ToString();
+            label_fine_dalt.Text = udpkv.PIDPV_makedata(dalt).ToString();
+            label_fine_vk.Text   = udpkv.PIDPV_makedata(vk).ToString();
+        }
+        /// <summary>
+        /// PID data送信データセット(sfine)
+        /// </summary>
+        private void Pid_Data_Set_SF(short id, double daz, double dalt, double vk)
+        {
+            //送信するデータを読み込む
+            kv_pid_data.sf_time = udpkv.EndianChange((short)udpkv.udp_time_code); 
+            kv_pid_data.sf_id   = udpkv.EndianChange(id);
+            kv_pid_data.sf_az   = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
+            kv_pid_data.sf_alt  = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
+            kv_pid_data.sf_vk   = udpkv.EndianChange(udpkv.PIDPV_makedata(vk));
+
+            label_sf_f.Text    = id.ToString("00000") + " " + ((short)udpkv.udp_time_code).ToString("00000");
+            label_sf_daz.Text  = udpkv.PIDPV_makedata(daz).ToString();
+            label_sf_dalt.Text = udpkv.PIDPV_makedata(dalt).ToString();
+            label_sf_vk.Text   = udpkv.PIDPV_makedata(vk).ToString();
         }
         /// <summary>
         /// PID data送信ルーチン(KV1000 UDPバイナリ)

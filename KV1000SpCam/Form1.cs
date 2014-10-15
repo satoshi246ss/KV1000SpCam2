@@ -25,7 +25,7 @@ namespace KV1000SpCam
         long elapsed0 = 0, elapsed1 = 0, elapsed2 = 0;
         double lap0 = 0, lap1 = 0, lap2 = 0, alpha = 0.01;
         static int udp_id=0;
-        static int udp_id_next = 50;
+        static int udp_id_next = 50;  //UDP　送信回数（１起動毎の）
         static int udp_send_on = 0;
         string cmd_str ="RD DM11390" ;
         int cmd_str_f = 0 ;
@@ -162,7 +162,7 @@ namespace KV1000SpCam
             {
                 idd++;
                 //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, idd });
-                Pid_Data_Set_Wide((short)-(short)((i & 32767)),  + i / 1000.0,  - i / 1000.0, 1.234); // 32767 == 7FFF
+                Pid_Data_Set_Wide((short)-(short)((i & 32767)),  + i / 1000.0,  - i / 1000.0, i/1000.0); // 32767 == 7FFF
                 int j = i % 3;
                 if (j == 0) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
                 if (j == 1) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
@@ -191,19 +191,6 @@ namespace KV1000SpCam
 
                 ++udp_id;
                 if (udp_id >= udp_id_next) udp_send_on = 0;
-
-                // 表示
-                label_wide_f.Text = kv_pid_data.wide_id.ToString(); // +" " + kv_pid_data.wide_time.ToString("00000");
-                label_wide_daz.Text = kv_pid_data.wide_az.ToString();
-                label_wide_dalt.Text = kv_pid_data.wide_alt.ToString();
-
-                label_fine_f.Text = kv_pid_data.fine_id.ToString(); // +" " + kv_pid_data.fine_time.ToString("00000");
-                label_fine_daz.Text = kv_pid_data.fine_az.ToString();
-                label_fine_dalt.Text = kv_pid_data.fine_alt.ToString();
-
-                label_sf_f.Text = kv_pid_data.sf_id.ToString(); // +" " + kv_pid_data.sf_time.ToString("00000");
-                label_sf_daz.Text = kv_pid_data.sf_az.ToString();
-                label_sf_dalt.Text = kv_pid_data.sf_alt.ToString();
             }
 
         }

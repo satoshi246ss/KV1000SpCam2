@@ -58,6 +58,9 @@
             this.label_UdpSendData = new System.Windows.Forms.Label();
             this.timerObsOnOff = new System.Windows.Forms.Timer(this.components);
             this.checkBoxObsAuto = new System.Windows.Forms.CheckBox();
+            this.label_wide_vk = new System.Windows.Forms.Label();
+            this.label_fine_vk = new System.Windows.Forms.Label();
+            this.label_sf_vk = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -339,11 +342,41 @@
             this.checkBoxObsAuto.Text = "checkBox1";
             this.checkBoxObsAuto.UseVisualStyleBackColor = true;
             // 
+            // label_wide_vk
+            // 
+            this.label_wide_vk.AutoSize = true;
+            this.label_wide_vk.Location = new System.Drawing.Point(353, 30);
+            this.label_wide_vk.Name = "label_wide_vk";
+            this.label_wide_vk.Size = new System.Drawing.Size(30, 12);
+            this.label_wide_vk.TabIndex = 26;
+            this.label_wide_vk.Text = "W_vk";
+            // 
+            // label_fine_vk
+            // 
+            this.label_fine_vk.AutoSize = true;
+            this.label_fine_vk.Location = new System.Drawing.Point(353, 48);
+            this.label_fine_vk.Name = "label_fine_vk";
+            this.label_fine_vk.Size = new System.Drawing.Size(28, 12);
+            this.label_fine_vk.TabIndex = 27;
+            this.label_fine_vk.Text = "F_vk";
+            // 
+            // label_sf_vk
+            // 
+            this.label_sf_vk.AutoSize = true;
+            this.label_sf_vk.Location = new System.Drawing.Point(353, 66);
+            this.label_sf_vk.Name = "label_sf_vk";
+            this.label_sf_vk.Size = new System.Drawing.Size(35, 12);
+            this.label_sf_vk.TabIndex = 28;
+            this.label_sf_vk.Text = "SF_vk";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(505, 226);
+            this.Controls.Add(this.label_sf_vk);
+            this.Controls.Add(this.label_fine_vk);
+            this.Controls.Add(this.label_wide_vk);
             this.Controls.Add(this.checkBoxObsAuto);
             this.Controls.Add(this.label_UdpSendData);
             this.Controls.Add(this.button_UDP_on);
@@ -408,6 +441,9 @@
         private System.Windows.Forms.Label label_UdpSendData;
         private System.Windows.Forms.Timer timerObsOnOff;
         private System.Windows.Forms.CheckBox checkBoxObsAuto;
+        private System.Windows.Forms.Label label_wide_vk;
+        private System.Windows.Forms.Label label_fine_vk;
+        private System.Windows.Forms.Label label_sf_vk;
     }
 }
 
