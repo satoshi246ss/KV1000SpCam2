@@ -14,6 +14,8 @@ namespace KV1000SpCam
 //        int KV_remotePort = 8503;  // 8503 UDP  8501 CMD
         KV_DATA kd = new KV_DATA();
         Udp udpkv = new Udp(7777);
+        KV_PID_DATA kv_pid_data   = new KV_PID_DATA();  //送信用
+        KV_PID_DATA kv_pid_data_r = new KV_PID_DATA();  //受信データ
 
         public String rstr;
         delegate void dlgSetString(object lbl, string text);
@@ -71,6 +73,11 @@ namespace KV1000SpCam
                 Pid_Data_Set(kv_pid_data_r);
                 udp_id_next = udp_id + 50;
                 udp_send_on = 1; // pid data 送信実行
+
+                String rrstr = " w:"+kv_pid_data_r.wide_id.ToString()+" f:"+ kv_pid_data_r.fine_id.ToString()+" "+kv_pid_data_r.fine_az.ToString() ;
+                string s = "R:(" + rdat.Length + ")" + ipAny.Address + "(" + ipAny.Port.ToString() + ")";
+                rstr = LogString(rrstr, s);
+                Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, rstr });
             }
             else // それ以外
             {
@@ -197,10 +204,11 @@ namespace KV1000SpCam
                 this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
             }
             string s = "S:" + remoteHost + "(" + remotePort.ToString() + ")";
-            string s1 = kv_pid_data.wide_id.ToString() + " " + kv_pid_data.wide_az.ToString() + " " + kv_pid_data.wide_alt.ToString()+" " + kv_pid_data.wide_vk.ToString();
+            string s1 = kv_pid_data.wide_id.ToString() + " " + kv_pid_data.wide_az.ToString() + " " + kv_pid_data.wide_alt.ToString() + " " + kv_pid_data.wide_vk.ToString();
+            s1       += kv_pid_data.fine_id.ToString() + " " + kv_pid_data.fine_az.ToString() + " " + kv_pid_data.fine_alt.ToString() + " " + kv_pid_data.fine_vk.ToString();
             string s2 = LogString(s1, s);
             this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_UdpSendData, s2 });
-            //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
+            this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
         }
 
         /// <summary>

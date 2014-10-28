@@ -32,10 +32,8 @@ namespace KV1000SpCam
         String udp_r;
 
         FSI_PID_DATA pid_data = new FSI_PID_DATA();
-        KV_PID_DATA kv_pid_data   = new KV_PID_DATA();
-        KV_PID_DATA kv_pid_data_r = new KV_PID_DATA();
         MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
-        int mmFsiUdpPortKV1000SpCam2  = 24426; //24410;            // MT3IDS （送信）
+        int mmFsiUdpPortKV1000SpCam2  = 24426; //24410;            // MT3IDS （受信）
         int mmFsiUdpPortKV1000SpCam2s = 24427; //24426;            // MT3IDS （送信）
         int mmFsiUdpPortMTmonitor = 24415;
         string mmFsiCore_i5 = "192.168.1.211";
@@ -158,11 +156,12 @@ namespace KV1000SpCam
 
             int idd = 32765;
             sw.Start();
-            for (short i = 0; i < 3000; i++)
+            for (short i = 0; i < 30; i++)
             {
                 idd++;
                 //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, idd });
-                Pid_Data_Set_Wide((short)-(short)((i & 32767)),  + i / 1000.0,  - i / 1000.0, i/1000.0); // 32767 == 7FFF
+                Pid_Data_Set_Wide((short)((i & 32767)), +i / 1000.0,  - i / 1000.0, i/1000.0); // 32767 == 7FFF
+                Pid_Data_Set_Fine((short)((i & 32767)), +i / 1000.0, -i / 1000.0, i / 1000.0); // 32767 == 7FFF
                 int j = i % 3;
                 if (j == 0) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
                 if (j == 1) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
