@@ -207,8 +207,8 @@ namespace KV1000SpCam
             string s1 = kv_pid_data.wide_id.ToString() + " " + kv_pid_data.wide_az.ToString() + " " + kv_pid_data.wide_alt.ToString() + " " + kv_pid_data.wide_vk.ToString();
             s1       += kv_pid_data.fine_id.ToString() + " " + kv_pid_data.fine_az.ToString() + " " + kv_pid_data.fine_alt.ToString() + " " + kv_pid_data.fine_vk.ToString();
             string s2 = LogString(s1, s);
-            this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_UdpSendData, s2 });
-            this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
+          //  this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_UdpSendData, s2 });
+          //  this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
         }
 
         /// <summary>

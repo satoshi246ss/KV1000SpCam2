@@ -156,19 +156,21 @@ namespace KV1000SpCam
 
             int idd = 32765;
             sw.Start();
-            for (short i = 0; i < 30; i++)
+            for (short i = 0; i < 1000; i++)
             {
                 idd++;
                 //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, idd });
                 Pid_Data_Set_Wide((short)((i & 32767)), +i / 1000.0,  - i / 1000.0, i/1000.0); // 32767 == 7FFF
                 Pid_Data_Set_Fine((short)((i & 32767)), +i / 1000.0, -i / 1000.0, i / 1000.0); // 32767 == 7FFF
-                int j = i % 3;
+                int j = i % 5;
                 if (j == 0) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
-                if (j == 1) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
+                if (j == 1) Pid_Data_Send_KV1000("192.168.1.12"); //UDP3 
                 if (j == 2) Pid_Data_Send_KV1000("192.168.1.10"); //UDP1 
+                if (j == 3) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
+                if (j == 4) Pid_Data_Send_KV1000("192.168.1.12"); //UDP3 
 
                 //Pid_Data_Send_cmd_KV1000((short)-(short)((idd & 32767)), 32.765 + i / 1000.0, -32.765 - i / 1000.0); // 32767 == 7FFF
-                System.Threading.Thread.Sleep(13); // 13ms->75Hz
+                System.Threading.Thread.Sleep(9); // 9ms->111Hz   13ms->75Hz
             }
             sw.Stop();
             long millisec = sw.ElapsedMilliseconds;
@@ -183,10 +185,12 @@ namespace KV1000SpCam
         {
             if (udp_send_on == 1)
             {
-                int j = udp_id % 3;
+                int j = udp_id % 5;
                 if (j == 0) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
-                if (j == 1) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
-                if (j == 2) Pid_Data_Send_KV1000("192.168.1.10"); //UDP1
+                if (j == 1) Pid_Data_Send_KV1000("192.168.1.12"); //UDP3 
+                if (j == 2) Pid_Data_Send_KV1000("192.168.1.10"); //UDP1 
+                if (j == 3) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
+                if (j == 4) Pid_Data_Send_KV1000("192.168.1.12"); //UDP3 
 
                 ++udp_id;
                 if (udp_id >= udp_id_next) udp_send_on = 0;
