@@ -180,8 +180,7 @@ namespace KV1000SpCam
 
         }
 
-
-        private void timer_udp_Tick(object sender, EventArgs e)
+        private void send_udp_data()
         {
             if (udp_send_on == 1)
             {
@@ -195,7 +194,11 @@ namespace KV1000SpCam
                 ++udp_id;
                 if (udp_id >= udp_id_next) udp_send_on = 0;
             }
+        }
 
+        private void timer_udp_Tick(object sender, EventArgs e)
+        {
+            send_udp_data();
         }
 
         private void button_UDP_on_Click(object sender, EventArgs e)

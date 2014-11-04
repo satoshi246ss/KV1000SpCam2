@@ -70,9 +70,10 @@ namespace KV1000SpCam
             if (rdat.Length == Marshal.SizeOf(kv_pid_data_r))
             {
                 udpkv.set_udp_pid_data(rdat, ref kv_pid_data_r);
-                Pid_Data_Set(kv_pid_data_r);
+
                 udp_id_next = udp_id + 50;
                 udp_send_on = 1; // pid data 送信実行
+                Pid_Data_Set(kv_pid_data_r);
 
                 String rrstr = " w:"+kv_pid_data_r.wide_id.ToString()+" f:"+ kv_pid_data_r.fine_id.ToString()+" "+kv_pid_data_r.fine_az.ToString() ;
                 string s = "R:(" + rdat.Length + ")" + ipAny.Address + "(" + ipAny.Port.ToString() + ")";
@@ -111,6 +112,14 @@ namespace KV1000SpCam
                 kv_pid_data.wide_alt  = kpdr.wide_alt;
                 kv_pid_data.wide_vk   = kpdr.wide_vk;
             }
+            if (kpdr.sf_id != 0)
+            {
+                kv_pid_data.sf_time = kpdr.sf_time;
+                kv_pid_data.sf_id = kpdr.sf_id;
+                kv_pid_data.sf_az = kpdr.sf_az;
+                kv_pid_data.sf_alt = kpdr.sf_alt;
+                kv_pid_data.sf_vk = kpdr.sf_vk;
+            }
             if (kpdr.fine_id != 0)
             {
                 kv_pid_data.fine_time = kpdr.fine_time;
@@ -118,14 +127,9 @@ namespace KV1000SpCam
                 kv_pid_data.fine_az   = kpdr.fine_az;
                 kv_pid_data.fine_alt  = kpdr.fine_alt;
                 kv_pid_data.fine_vk   = kpdr.fine_vk;
-            }
-            if (kpdr.sf_id != 0)
-            {
-                kv_pid_data.sf_time = kpdr.sf_time;
-                kv_pid_data.sf_id   = kpdr.sf_id;
-                kv_pid_data.sf_az   = kpdr.sf_az;
-                kv_pid_data.sf_alt  = kpdr.sf_alt;
-                kv_pid_data.sf_vk   = kpdr.sf_vk;
+
+                send_udp_data();
+                udp_send_on = 0;
             }
         }
 
