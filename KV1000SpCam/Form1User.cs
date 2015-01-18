@@ -104,6 +104,14 @@ namespace KV1000SpCam
         private void Pid_Data_Set(KV_PID_DATA kpdr)
         {
             //IDがゼロでなければコピー
+            if (kpdr.mt2_wide_id != 0)
+            {
+                kv_pid_data.mt2_wide_time = kpdr.mt2_wide_time;
+                kv_pid_data.mt2_wide_id   = kpdr.mt2_wide_id;
+                kv_pid_data.mt2_wide_az   = kpdr.mt2_wide_az;
+                kv_pid_data.mt2_wide_alt  = kpdr.mt2_wide_alt;
+                kv_pid_data.mt2_wide_vk   = kpdr.mt2_wide_vk;
+            }
             if (kpdr.wide_id != 0)
             {
                 kv_pid_data.wide_time = kpdr.wide_time;
@@ -134,7 +142,7 @@ namespace KV1000SpCam
         }
 
         /// <summary>
-        /// PID data送信データセット(for test)
+        /// PID data送信データセット(Wide)
         /// </summary>
         private void Pid_Data_Set_Wide(short id, double daz, double dalt, double vk)
         {
@@ -183,6 +191,23 @@ namespace KV1000SpCam
             label_sf_daz.Text  = udpkv.PIDPV_makedata(daz).ToString();
             label_sf_dalt.Text = udpkv.PIDPV_makedata(dalt).ToString();
             label_sf_vk.Text   = udpkv.PIDPV_makedata(vk).ToString();
+        }
+        /// <summary>
+        /// PID data送信データセット(MT2 Wide)
+        /// </summary>
+        private void Pid_Data_Set_MT2Wide(short id, double daz, double dalt, double vk)
+        {
+            //送信するデータを読み込む
+            kv_pid_data.mt2_wide_time = udpkv.EndianChange((short)udpkv.udp_time_code);
+            kv_pid_data.mt2_wide_id   = udpkv.EndianChange(id);
+            kv_pid_data.mt2_wide_az   = udpkv.EndianChange(udpkv.PIDPV_makedata(daz));
+            kv_pid_data.mt2_wide_alt  = udpkv.EndianChange(udpkv.PIDPV_makedata(dalt));
+            kv_pid_data.mt2_wide_vk   = udpkv.EndianChange(udpkv.PIDPV_makedata(vk));
+
+            label_MT2wide_f.Text      = id.ToString("00000") + " " + ((short)udpkv.udp_time_code).ToString("00000");
+            label_MT2wide_daz.Text    = udpkv.PIDPV_makedata(daz).ToString();
+            label_MT2wide_dalt.Text   = udpkv.PIDPV_makedata(dalt).ToString();
+            label_MT2wide_vk.Text     = udpkv.PIDPV_makedata(vk).ToString();
         }
         /// <summary>
         /// PID data送信ルーチン(KV1000 UDPバイナリ)

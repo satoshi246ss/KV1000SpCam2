@@ -61,6 +61,11 @@
             this.label_wide_vk = new System.Windows.Forms.Label();
             this.label_fine_vk = new System.Windows.Forms.Label();
             this.label_sf_vk = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label_MT2wide_f = new System.Windows.Forms.Label();
+            this.label_MT2wide_daz = new System.Windows.Forms.Label();
+            this.label_MT2wide_dalt = new System.Windows.Forms.Label();
+            this.label_MT2wide_vk = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -369,11 +374,63 @@
             this.label_sf_vk.TabIndex = 28;
             this.label_sf_vk.Text = "SF_vk";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(122, 90);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(38, 12);
+            this.label6.TabIndex = 29;
+            this.label6.Text = "MT2W:";
+            this.label6.Click += new System.EventHandler(this.label6_Click);
+            // 
+            // label_MT2wide_f
+            // 
+            this.label_MT2wide_f.AutoSize = true;
+            this.label_MT2wide_f.Location = new System.Drawing.Point(160, 90);
+            this.label_MT2wide_f.Name = "label_MT2wide_f";
+            this.label_MT2wide_f.Size = new System.Drawing.Size(22, 12);
+            this.label_MT2wide_f.TabIndex = 30;
+            this.label_MT2wide_f.Text = "W_f";
+            // 
+            // label_MT2wide_daz
+            // 
+            this.label_MT2wide_daz.AutoSize = true;
+            this.label_MT2wide_daz.Location = new System.Drawing.Point(207, 92);
+            this.label_MT2wide_daz.Name = "label_MT2wide_daz";
+            this.label_MT2wide_daz.Size = new System.Drawing.Size(35, 12);
+            this.label_MT2wide_daz.TabIndex = 31;
+            this.label_MT2wide_daz.Text = "W_daz";
+            // 
+            // label_MT2wide_dalt
+            // 
+            this.label_MT2wide_dalt.AutoSize = true;
+            this.label_MT2wide_dalt.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.label_MT2wide_dalt.Location = new System.Drawing.Point(293, 90);
+            this.label_MT2wide_dalt.Name = "label_MT2wide_dalt";
+            this.label_MT2wide_dalt.Size = new System.Drawing.Size(37, 12);
+            this.label_MT2wide_dalt.TabIndex = 32;
+            this.label_MT2wide_dalt.Text = "W_dalt";
+            // 
+            // label_MT2wide_vk
+            // 
+            this.label_MT2wide_vk.AutoSize = true;
+            this.label_MT2wide_vk.Location = new System.Drawing.Point(351, 90);
+            this.label_MT2wide_vk.Name = "label_MT2wide_vk";
+            this.label_MT2wide_vk.Size = new System.Drawing.Size(30, 12);
+            this.label_MT2wide_vk.TabIndex = 33;
+            this.label_MT2wide_vk.Text = "W_vk";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(505, 226);
+            this.Controls.Add(this.label_MT2wide_vk);
+            this.Controls.Add(this.label_MT2wide_dalt);
+            this.Controls.Add(this.label_MT2wide_daz);
+            this.Controls.Add(this.label_MT2wide_f);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label_sf_vk);
             this.Controls.Add(this.label_fine_vk);
             this.Controls.Add(this.label_wide_vk);
@@ -444,6 +501,11 @@
         private System.Windows.Forms.Label label_wide_vk;
         private System.Windows.Forms.Label label_fine_vk;
         private System.Windows.Forms.Label label_sf_vk;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label_MT2wide_f;
+        private System.Windows.Forms.Label label_MT2wide_daz;
+        private System.Windows.Forms.Label label_MT2wide_dalt;
+        private System.Windows.Forms.Label label_MT2wide_vk;
     }
 }
 

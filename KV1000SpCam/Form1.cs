@@ -289,5 +289,10 @@ namespace KV1000SpCam
             }
         }
 
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
      }
 }
