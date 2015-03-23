@@ -289,8 +289,12 @@ namespace KV1000SpCam
             }
         }
 
-        private void label6_Click(object sender, EventArgs e)
+         private void button_SetMT2Pos_Click(object sender, EventArgs e)
         {
+            double mt2az = Convert.ToDouble(textBox_MT2Az.Text);
+            double mt2alt = Convert.ToDouble(textBox_MT2Alt.Text);
+            double mt2zaz = Convert.ToDouble(textBox_MT2ZAz.Text);
+            double mt2zdt = Convert.ToDouble(textBox_MT2ｄZT.Text);
 
         }
 

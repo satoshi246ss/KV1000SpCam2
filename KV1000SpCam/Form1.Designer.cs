@@ -66,6 +66,15 @@
             this.label_MT2wide_daz = new System.Windows.Forms.Label();
             this.label_MT2wide_dalt = new System.Windows.Forms.Label();
             this.label_MT2wide_vk = new System.Windows.Forms.Label();
+            this.textBox_MT2Az = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBox_MT2Alt = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.textBox_MT2ZAz = new System.Windows.Forms.TextBox();
+            this.textBox_MT2ｄZT = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.button_SetMT2Pos = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,7 +93,7 @@
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox1.Location = new System.Drawing.Point(0, 107);
+            this.richTextBox1.Location = new System.Drawing.Point(0, 153);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(505, 117);
             this.richTextBox1.TabIndex = 1;
@@ -382,7 +391,6 @@
             this.label6.Size = new System.Drawing.Size(38, 12);
             this.label6.TabIndex = 29;
             this.label6.Text = "MT2W:";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // label_MT2wide_f
             // 
@@ -421,11 +429,100 @@
             this.label_MT2wide_vk.TabIndex = 33;
             this.label_MT2wide_vk.Text = "W_vk";
             // 
+            // textBox_MT2Az
+            // 
+            this.textBox_MT2Az.Location = new System.Drawing.Point(124, 107);
+            this.textBox_MT2Az.Name = "textBox_MT2Az";
+            this.textBox_MT2Az.Size = new System.Drawing.Size(53, 19);
+            this.textBox_MT2Az.TabIndex = 34;
+            this.textBox_MT2Az.Text = "90.0";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(64, 110);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(44, 12);
+            this.label7.TabIndex = 35;
+            this.label7.Text = "MT2 Az";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(64, 128);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(46, 12);
+            this.label8.TabIndex = 36;
+            this.label8.Text = "MT2 Alt";
+            // 
+            // textBox_MT2Alt
+            // 
+            this.textBox_MT2Alt.Location = new System.Drawing.Point(124, 128);
+            this.textBox_MT2Alt.Name = "textBox_MT2Alt";
+            this.textBox_MT2Alt.Size = new System.Drawing.Size(53, 19);
+            this.textBox_MT2Alt.TabIndex = 37;
+            this.textBox_MT2Alt.Text = "90.0";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(207, 110);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(51, 12);
+            this.label10.TabIndex = 38;
+            this.label10.Text = "MT2 ZAz";
+            // 
+            // textBox_MT2ZAz
+            // 
+            this.textBox_MT2ZAz.Location = new System.Drawing.Point(264, 103);
+            this.textBox_MT2ZAz.Name = "textBox_MT2ZAz";
+            this.textBox_MT2ZAz.Size = new System.Drawing.Size(53, 19);
+            this.textBox_MT2ZAz.TabIndex = 39;
+            this.textBox_MT2ZAz.Text = "90.0";
+            // 
+            // textBox_MT2ｄZT
+            // 
+            this.textBox_MT2ｄZT.Location = new System.Drawing.Point(264, 128);
+            this.textBox_MT2ｄZT.Name = "textBox_MT2ｄZT";
+            this.textBox_MT2ｄZT.Size = new System.Drawing.Size(53, 19);
+            this.textBox_MT2ｄZT.TabIndex = 40;
+            this.textBox_MT2ｄZT.Text = "1.3";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(207, 128);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(56, 12);
+            this.label11.TabIndex = 41;
+            this.label11.Text = "MT2 dZθ";
+            // 
+            // button_SetMT2Pos
+            // 
+            this.button_SetMT2Pos.BackColor = System.Drawing.SystemColors.Control;
+            this.button_SetMT2Pos.Font = new System.Drawing.Font("MS UI Gothic", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button_SetMT2Pos.Location = new System.Drawing.Point(12, 105);
+            this.button_SetMT2Pos.Name = "button_SetMT2Pos";
+            this.button_SetMT2Pos.Size = new System.Drawing.Size(44, 42);
+            this.button_SetMT2Pos.TabIndex = 42;
+            this.button_SetMT2Pos.Text = "Set MT2 Pos";
+            this.button_SetMT2Pos.UseVisualStyleBackColor = false;
+            this.button_SetMT2Pos.Click += new System.EventHandler(this.button_SetMT2Pos_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(505, 226);
+            this.ClientSize = new System.Drawing.Size(505, 272);
+            this.Controls.Add(this.button_SetMT2Pos);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.textBox_MT2ｄZT);
+            this.Controls.Add(this.textBox_MT2ZAz);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.textBox_MT2Alt);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.textBox_MT2Az);
             this.Controls.Add(this.label_MT2wide_vk);
             this.Controls.Add(this.label_MT2wide_dalt);
             this.Controls.Add(this.label_MT2wide_daz);
@@ -506,6 +603,15 @@
         private System.Windows.Forms.Label label_MT2wide_daz;
         private System.Windows.Forms.Label label_MT2wide_dalt;
         private System.Windows.Forms.Label label_MT2wide_vk;
+        private System.Windows.Forms.TextBox textBox_MT2Az;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBox_MT2Alt;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBox_MT2ZAz;
+        private System.Windows.Forms.TextBox textBox_MT2ｄZT;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button button_SetMT2Pos;
     }
 }
 
