@@ -269,7 +269,7 @@ namespace KV1000SpCam
 
             double az_zc, alt_zc;
             z_correct(mt2az, mt2alt, mt2zaz, mt2zdt, out az_zc, out alt_zc);
-            string s = string.Format("Az:{0},{1}  {2},{3}  ans:{4},{5}", mt2az, mt2alt, mt2zaz, mt2zdt,  az_zc, alt_zc);
+            string s = string.Format("Az:{0},{1}  {2},{3}  ans:{4,0:F2},{5,0:F2}", mt2az, mt2alt, mt2zaz, mt2zdt,  az_zc, alt_zc);
             richTextBox1.AppendText(s);
         }
 
