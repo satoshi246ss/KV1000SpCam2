@@ -4,13 +4,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.IO;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace KV1000SpCam
 {
     public partial class Form1 : Form
     {
-//        string KV_remoteHost = "192.168.1.10"; // KV1000;
+        //観測時間帯を表す定数
+        const int Daytime = 0;
+        const int Nighttime = 1;
+        //上の状態を保持します
+        int States = 0;
+
+        Stopwatch sw = new Stopwatch();
+        long elapsed0 = 0, elapsed1 = 0, elapsed2 = 0;
+        double lap0 = 0, lap1 = 0, lap2 = 0, alpha = 0.01;
+        static int udp_id = 0;
+        static int udp_id_next = 50;  //UDP　送信回数（１起動毎の）
+        static int udp_send_on = 0;
+        string cmd_str = "RD DM11390";
+        int cmd_str_f = 0;
+        String udp_r;
+
+        FSI_PID_DATA pid_data = new FSI_PID_DATA();
+        MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
+        int mmFsiUdpPortKV1000SpCam2 = 24426; //24410;            // MT3IDS （受信）
+        int mmFsiUdpPortKV1000SpCam2s = 24427; //24426;            // MT3IDS （送信）
+        int mmFsiUdpPortMTmonitor = 24415;
+        string mmFsiCore_i5 = "192.168.1.211";
+        int mmFsiUdpPortSpCam = 24410;   // SpCam（受信）
+        string mmFsiSC440 = "192.168.1.206";
+        System.Net.Sockets.UdpClient udpc = null;
+        System.Net.Sockets.UdpClient udpc2 = null;
+        DriveInfo cDrive = new DriveInfo("C");
+        long diskspace;
+
+        double mt2az, mt2alt, mt2zaz, mt2zdt;
+        
+        //        string KV_remoteHost = "192.168.1.10"; // KV1000;
 //        int KV_remotePort = 8503;  // 8503 UDP  8501 CMD
         KV_DATA kd = new KV_DATA();
         Udp udpkv = new Udp(7777);
@@ -295,6 +329,134 @@ namespace KV1000SpCam
             string s = "S:" + remoteHost + "(" + remotePort.ToString() + ")";
             string s2 = LogString(s1, s);
             this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
+        }
+        /// <summary>
+        /// 地平座標->方向余弦
+        /// </summary>
+        public Vector eq_directional_cosine(double az, double alt )
+        {
+            var v = Vector.Build.Dense(3);
+            //DenseVector ve = ve.Dense(10);
+            const double RAD = Math.PI/180.0 ;
+            
+            // 地平座標の方向余弦
+            v[0] = Math.Cos(alt * RAD) * Math.Cos(az * RAD);
+            v[1] =-Math.Cos(alt * RAD) * Math.Sin(az * RAD);
+            v[2] = Math.Sin(alt * RAD);
+
+            return (Vector)v;
+        }
+        /// <summary>
+        /// 地平座標<-方向余弦
+        /// </summary>
+        public void eq_rev_directional_cosine(Vector v, out double az, out double alt)
+        {            
+            const double RAD = Math.PI / 180.0;
+
+            alt = Math.Asin(v[2])/RAD ;
+            az = 0;
+            if (Math.Abs(v[0]) < 1e-9)
+            {
+                if (-v[1] >= 0) az = 90;
+                if (-v[1] < 0) az = -90;
+            }
+            else
+            {
+                az = Math.Atan2(-v[1], v[0]) / RAD;
+            }
+
+            while (az < 0) az += 360;
+            while (az >= 360) az -= 360;
+        }
+        /// <summary>
+        /// X軸回転
+        /// </summary>
+        public Matrix Rotate_X(double theta)
+        {
+            var m = Matrix.Build.Dense(3, 3);
+            const double RAD = Math.PI / 180.0;
+            double sinth = Math.Sin(theta * RAD);
+            double costh = Math.Cos(theta * RAD);
+
+            m[0, 0] = 1;
+            m[0, 1] = 0;
+            m[0, 2] = 0;
+
+            m[1, 0] = 0;
+            m[1, 1] = costh;
+            m[1, 2] = -sinth;
+
+            m[2, 0] = 0;
+            m[2, 1] = sinth;
+            m[2, 2] = costh;
+
+            return (Matrix)m;
+        }
+        /// <summary>
+        /// Y軸回転
+        /// </summary>
+        public Matrix Rotate_Y(double theta)
+        {
+            var m = Matrix.Build.Dense(3, 3);
+            const double RAD = Math.PI / 180.0;
+            double sinth = Math.Sin(theta * RAD);
+            double costh = Math.Cos(theta * RAD);
+
+            m[0, 0] = costh;
+            m[0, 1] = 0;
+            m[0, 2] = sinth;
+
+            m[1, 0] = 0;
+            m[1, 1] = 1;
+            m[1, 2] = 0;
+
+            m[2, 0] = -sinth;
+            m[2, 1] = 0;
+            m[2, 2] = costh;
+
+            return (Matrix)m;
+        }
+        /// <summary>
+        /// Z軸回転
+        /// </summary>
+        public Matrix Rotate_Z(double theta)
+        {
+            var m = Matrix.Build.Dense(3,3);
+            const double RAD = Math.PI / 180.0;
+            double sinth = Math.Sin(theta * RAD);
+            double costh = Math.Cos(theta * RAD);
+
+            m[0, 0] = costh;
+            m[0, 1] = -sinth;
+            m[0, 2] = 0;
+
+            m[1, 0] = sinth;
+            m[1, 1] = costh;
+            m[1, 2] = 0;
+
+            m[2, 0] = 0;
+            m[2, 1] = 0;
+            m[2, 2] = 1;
+
+            return (Matrix)m;
+        }
+        /// <summary>
+        /// 地平座標<-方向余弦
+        /// </summary>
+        public void z_correct(double az, double alt, double zaz, double dzt, out double az_zc, out double alt_zc)
+        {
+            const double RAD = Math.PI / 180.0;
+            Vector vt = eq_directional_cosine(az, alt);
+
+            Matrix my = Rotate_Y(dzt); // 天頂づれ補正　dzt:北側が＋
+            Matrix mz1 = Rotate_Z(90+180 - az - zaz); // 
+            Matrix mz2 = Rotate_Z(-(90+180 - az - zaz)); // 
+ 
+            var v1 = mz1.Multiply(vt);
+            var v2 = my.Multiply(v1);
+            var v3 = mz2.Multiply(v2);
+
+            eq_rev_directional_cosine((Vector)v3, out az_zc, out alt_zc);
         }
     }
 }

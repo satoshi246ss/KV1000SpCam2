@@ -7,43 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Diagnostics;
+//using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.IO;
+//using System.IO;
 
 namespace KV1000SpCam
 {
     public partial class Form1 : Form
     {
-        //観測時間帯を表す定数
-        const int Daytime   = 0;
-        const int Nighttime = 1;
-        //上の状態を保持します
-        int States = 0;
-
-        Stopwatch sw = new Stopwatch();
-        long elapsed0 = 0, elapsed1 = 0, elapsed2 = 0;
-        double lap0 = 0, lap1 = 0, lap2 = 0, alpha = 0.01;
-        static int udp_id=0;
-        static int udp_id_next = 50;  //UDP　送信回数（１起動毎の）
-        static int udp_send_on = 0;
-        string cmd_str ="RD DM11390" ;
-        int cmd_str_f = 0 ;
-        String udp_r;
-
-        FSI_PID_DATA pid_data = new FSI_PID_DATA();
-        MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
-        int mmFsiUdpPortKV1000SpCam2  = 24426; //24410;            // MT3IDS （受信）
-        int mmFsiUdpPortKV1000SpCam2s = 24427; //24426;            // MT3IDS （送信）
-        int mmFsiUdpPortMTmonitor = 24415;
-        string mmFsiCore_i5 = "192.168.1.211";
-        int mmFsiUdpPortSpCam = 24410;   // SpCam（受信）
-        string mmFsiSC440 = "192.168.1.206";
-        System.Net.Sockets.UdpClient udpc  = null;
-        System.Net.Sockets.UdpClient udpc2 = null;
-        DriveInfo cDrive = new DriveInfo("C");
-        long diskspace;
-
         [DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
         public static extern uint timeBeginPeriod(uint uMilliseconds);
 
@@ -289,13 +260,17 @@ namespace KV1000SpCam
             }
         }
 
-         private void button_SetMT2Pos_Click(object sender, EventArgs e)
+        private void button_SetMT2Pos_Click(object sender, EventArgs e)
         {
-            double mt2az = Convert.ToDouble(textBox_MT2Az.Text);
-            double mt2alt = Convert.ToDouble(textBox_MT2Alt.Text);
-            double mt2zaz = Convert.ToDouble(textBox_MT2ZAz.Text);
-            double mt2zdt = Convert.ToDouble(textBox_MT2ｄZT.Text);
+            mt2az = Convert.ToDouble(textBox_MT2Az.Text);
+            mt2alt = Convert.ToDouble(textBox_MT2Alt.Text);
+            mt2zaz = Convert.ToDouble(textBox_MT2ZAz.Text);
+            mt2zdt = Convert.ToDouble(textBox_MT2ｄZT.Text);
 
+            double az_zc, alt_zc;
+            z_correct(mt2az, mt2alt, mt2zaz, mt2zdt, out az_zc, out alt_zc);
+            string s = string.Format("Az:{0},{1}  {2},{3}  ans:{4},{5}", mt2az, mt2alt, mt2zaz, mt2zdt,  az_zc, alt_zc);
+            richTextBox1.AppendText(s);
         }
 
      }

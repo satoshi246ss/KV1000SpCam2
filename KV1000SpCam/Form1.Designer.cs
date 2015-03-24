@@ -461,7 +461,7 @@
             this.textBox_MT2Alt.Name = "textBox_MT2Alt";
             this.textBox_MT2Alt.Size = new System.Drawing.Size(53, 19);
             this.textBox_MT2Alt.TabIndex = 37;
-            this.textBox_MT2Alt.Text = "90.0";
+            this.textBox_MT2Alt.Text = "80.0";
             // 
             // label10
             // 
@@ -474,11 +474,11 @@
             // 
             // textBox_MT2ZAz
             // 
-            this.textBox_MT2ZAz.Location = new System.Drawing.Point(264, 103);
+            this.textBox_MT2ZAz.Location = new System.Drawing.Point(264, 107);
             this.textBox_MT2ZAz.Name = "textBox_MT2ZAz";
             this.textBox_MT2ZAz.Size = new System.Drawing.Size(53, 19);
             this.textBox_MT2ZAz.TabIndex = 39;
-            this.textBox_MT2ZAz.Text = "90.0";
+            this.textBox_MT2ZAz.Text = "180.0";
             // 
             // textBox_MT2ｄZT
             // 
@@ -486,7 +486,7 @@
             this.textBox_MT2ｄZT.Name = "textBox_MT2ｄZT";
             this.textBox_MT2ｄZT.Size = new System.Drawing.Size(53, 19);
             this.textBox_MT2ｄZT.TabIndex = 40;
-            this.textBox_MT2ｄZT.Text = "1.3";
+            this.textBox_MT2ｄZT.Text = "2.08";
             // 
             // label11
             // 
