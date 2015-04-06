@@ -75,6 +75,7 @@
             this.textBox_MT2ｄZT = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.button_SetMT2Pos = new System.Windows.Forms.Button();
+            this.timerDisp = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -509,6 +510,12 @@
             this.button_SetMT2Pos.UseVisualStyleBackColor = false;
             this.button_SetMT2Pos.Click += new System.EventHandler(this.button_SetMT2Pos_Click);
             // 
+            // timerDisp
+            // 
+            this.timerDisp.Enabled = true;
+            this.timerDisp.Interval = 500;
+            this.timerDisp.Tick += new System.EventHandler(this.timerDisp_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -558,6 +565,7 @@
             this.Text = "KV1000SpCam_2   (192.168.1.204:24426)";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.Form1_Shown);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -612,6 +620,7 @@
         private System.Windows.Forms.TextBox textBox_MT2ｄZT;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button button_SetMT2Pos;
+        private System.Windows.Forms.Timer timerDisp;
     }
 }
 

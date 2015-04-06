@@ -18,6 +18,7 @@ namespace KV1000SpCam
         const int Nighttime = 1;
         //上の状態を保持します
         int States = 0;
+        TimeSpan starttime, endtime;
 
         Stopwatch sw = new Stopwatch();
         long elapsed0 = 0, elapsed1 = 0, elapsed2 = 0;
@@ -96,8 +97,8 @@ namespace KV1000SpCam
             {
                 udpkv.set_udp_kv_data(rdat, ref kd);
                 udpkv.cal_mt3(kd);
-                Invoke(new dlgSetString(ShowLabelText), new object[] { label_x2pos, udpkv.x2pos.ToString() });
-                Invoke(new dlgSetString(ShowLabelText), new object[] { label_y2pos, udpkv.y2pos.ToString() });
+                //Invoke(new dlgSetString(ShowLabelText), new object[] { label_x2pos, udpkv.x2pos.ToString() });
+                //Invoke(new dlgSetString(ShowLabelText), new object[] { label_y2pos, udpkv.y2pos.ToString() });
             }
             else           
             // KV_PID_DATA
@@ -441,22 +442,43 @@ namespace KV1000SpCam
             return (Matrix)m;
         }
         /// <summary>
-        /// 地平座標<-方向余弦
+        /// Az軸方向と天頂との誤差の補正
+        /// Zaz：天頂から見たAz軸方位(deg)
+        /// dat：天頂から見たAz軸距離(deg)
         /// </summary>
         public void z_correct(double az, double alt, double zaz, double dzt, out double az_zc, out double alt_zc)
         {
-            const double RAD = Math.PI / 180.0;
             Vector vt = eq_directional_cosine(az, alt);
 
-            Matrix my = Rotate_Y(dzt); // 天頂づれ補正　dzt:北側が＋
-            Matrix mz1 = Rotate_Z(90+180 - az - zaz); // 
-            Matrix mz2 = Rotate_Z(-(90+180 - az - zaz)); // 
- 
-            var v1 = mz1.Multiply(vt);
-            var v2 = my.Multiply(v1);
-            var v3 = mz2.Multiply(v2);
+            Matrix my = Rotate_Y(-dzt); // 天頂づれ補正　dzt:北側が＋
+            Matrix mz1 = Rotate_Z(zaz); // 
+            Matrix mz2 = Rotate_Z(-zaz); // 
 
+            var v1 = mz1.Multiply(vt);
+            eq_rev_directional_cosine((Vector)v1, out az_zc, out alt_zc);
+            var v2 = my.Multiply(v1);
+            eq_rev_directional_cosine((Vector)v2, out az_zc, out alt_zc);
+            var v3 = mz2.Multiply(v2);
             eq_rev_directional_cosine((Vector)v3, out az_zc, out alt_zc);
         }
+        /// <summary>
+        /// Az軸とAlt軸の直交誤差の補正
+        /// </summary>
+        public void azalt_correct(double az, double alt, double zaz, double dzt, out double az_zc, out double alt_zc)
+        {
+            Vector vt = eq_directional_cosine(az, alt);
+
+            Matrix my = Rotate_Y(-dzt); // 天頂づれ補正　dzt:北側が＋
+            Matrix mz1 = Rotate_Z(zaz); // 
+            Matrix mz2 = Rotate_Z(-zaz); // 
+
+            var v1 = mz1.Multiply(vt);
+            eq_rev_directional_cosine((Vector)v1, out az_zc, out alt_zc);
+            var v2 = my.Multiply(v1);
+            eq_rev_directional_cosine((Vector)v2, out az_zc, out alt_zc);
+            var v3 = mz2.Multiply(v2);
+            eq_rev_directional_cosine((Vector)v3, out az_zc, out alt_zc);
+        }
+
     }
 }

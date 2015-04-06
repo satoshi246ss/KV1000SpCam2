@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 //using System.Diagnostics;
 using System.Runtime.InteropServices;
-//using System.IO;
+using MtLibrary;
 
 namespace KV1000SpCam
 {
@@ -36,6 +36,13 @@ namespace KV1000SpCam
             udpc.BeginReceive(ReceiveCallback, udpc);
 
             timeBeginPeriod(time_period);
+        }
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            starttime = Planet.ObsStartTime(DateTime.Now) - DateTime.Today;
+            endtime = Planet.ObsEndTime(DateTime.Now) - DateTime.Today;
+            string s = string.Format("ObsStart:{0},   ObsEnd:{1}\n", starttime, endtime);
+            richTextBox1.AppendText(s);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -238,8 +245,8 @@ namespace KV1000SpCam
         private void timerObsOnOff_Tick(object sender, EventArgs e)
         {
             TimeSpan nowtime = DateTime.Now - DateTime.Today;
-            TimeSpan endtime = new TimeSpan(7, 0, 0);
-            TimeSpan starttime = new TimeSpan(18,05, 0); //17 3 0
+            //TimeSpan endtime = new TimeSpan(7, 0, 0);
+            //TimeSpan starttime = new TimeSpan(18,05, 0); //17 3 0
 
             if (nowtime.CompareTo(endtime) >= 0 && nowtime.CompareTo(starttime) <= 0)
             {
@@ -269,9 +276,16 @@ namespace KV1000SpCam
 
             double az_zc, alt_zc;
             z_correct(mt2az, mt2alt, mt2zaz, mt2zdt, out az_zc, out alt_zc);
-            string s = string.Format("Az:{0},{1}  {2},{3}  ans:{4,0:F2},{5,0:F2}", mt2az, mt2alt, mt2zaz, mt2zdt,  az_zc, alt_zc);
+            string s = string.Format("Az:{0,0:F2}, {1,0:F2}  {2,0:F2}, {3,0:F2}  ans:{4,0:F2}, {5,0:F2}\n", mt2az, mt2alt, mt2zaz, mt2zdt, az_zc, alt_zc);
             richTextBox1.AppendText(s);
         }
+
+        private void timerDisp_Tick(object sender, EventArgs e)
+        {
+            label_x2pos.Text = udpkv.x2pos.ToString();
+            label_y2pos.Text = udpkv.y2pos.ToString();
+        }
+
 
      }
 }
