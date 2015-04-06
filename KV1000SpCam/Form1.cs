@@ -191,51 +191,64 @@ namespace KV1000SpCam
             }
         }
 
+        /// <summary>
+        /// インチング
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button_px_MouseDown(object sender, MouseEventArgs e)
         {
             string s1 = string.Format("ST 01212\r");
+            if (radioButton_MT2.Checked) s1 = string.Format("ST 01112\r");
             Send_R_ON_cmd_KV1000(s1);
         }
 
         private void button_px_MouseUp(object sender, MouseEventArgs e)
         {
             string s1 = string.Format("RS 01212\r");
+            if (radioButton_MT2.Checked) s1 = string.Format("RS 01112\r");
             Send_R_ON_cmd_KV1000(s1);
         }
 
         private void button_mx_MouseDown(object sender, MouseEventArgs e)
         {
             string s1 = string.Format("ST 01213\r");
+            if (radioButton_MT2.Checked) s1 = string.Format("ST 01113\r");
             Send_R_ON_cmd_KV1000(s1);
         }
 
         private void button_mx_MouseUp(object sender, MouseEventArgs e)
         {
             string s1 = string.Format("RS 01213\r");
+            if (radioButton_MT2.Checked) s1 = string.Format("RS 01113\r");
             Send_R_ON_cmd_KV1000(s1);
         }
 
         private void button_py_MouseDown(object sender, MouseEventArgs e)
         {
             string s1 = string.Format("ST 01214\r");
+            if (radioButton_MT2.Checked) s1 = string.Format("ST 01114\r");
             Send_R_ON_cmd_KV1000(s1);
         }
 
         private void button_py_MouseUp(object sender, MouseEventArgs e)
         {
             string s1 = string.Format("RS 01214\r");
+            if (radioButton_MT2.Checked) s1 = string.Format("RS 01114\r");
             Send_R_ON_cmd_KV1000(s1);
         }
 
         private void button_my_MouseDown(object sender, MouseEventArgs e)
         {
             string s1 = string.Format("ST 01215\r");
+            if (radioButton_MT2.Checked) s1 = string.Format("ST 01115\r");
             Send_R_ON_cmd_KV1000(s1);
         }
 
         private void button_my_MouseUp(object sender, MouseEventArgs e)
         {
             string s1 = string.Format("RS 01215\r");
+            if (radioButton_MT2.Checked) s1 = string.Format("RS 01115\r");
             Send_R_ON_cmd_KV1000(s1);
         }
 
@@ -284,6 +297,11 @@ namespace KV1000SpCam
         {
             label_x2pos.Text = udpkv.x2pos.ToString();
             label_y2pos.Text = udpkv.y2pos.ToString();
+
+            label_wide_f.Text    = kv_pid_data_r.wide_id.ToString("00000");
+            label_wide_daz.Text  = kv_pid_data_r.wide_az.ToString();
+            label_wide_dalt.Text = kv_pid_data_r.wide_alt.ToString();
+            label_wide_vk.Text   = kv_pid_data_r.wide_vk.ToString();
         }
 
 

@@ -76,7 +76,11 @@
             this.label11 = new System.Windows.Forms.Label();
             this.button_SetMT2Pos = new System.Windows.Forms.Button();
             this.timerDisp = new System.Windows.Forms.Timer(this.components);
+            this.radioButton_MT2 = new System.Windows.Forms.RadioButton();
+            this.radioButton_MT3 = new System.Windows.Forms.RadioButton();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_test
@@ -516,11 +520,44 @@
             this.timerDisp.Interval = 500;
             this.timerDisp.Tick += new System.EventHandler(this.timerDisp_Tick);
             // 
+            // radioButton_MT2
+            // 
+            this.radioButton_MT2.AutoSize = true;
+            this.radioButton_MT2.Checked = true;
+            this.radioButton_MT2.Location = new System.Drawing.Point(0, 12);
+            this.radioButton_MT2.Name = "radioButton_MT2";
+            this.radioButton_MT2.Size = new System.Drawing.Size(45, 16);
+            this.radioButton_MT2.TabIndex = 43;
+            this.radioButton_MT2.TabStop = true;
+            this.radioButton_MT2.Text = "MT2";
+            this.radioButton_MT2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton_MT3
+            // 
+            this.radioButton_MT3.AutoSize = true;
+            this.radioButton_MT3.Location = new System.Drawing.Point(0, 27);
+            this.radioButton_MT3.Name = "radioButton_MT3";
+            this.radioButton_MT3.Size = new System.Drawing.Size(45, 16);
+            this.radioButton_MT3.TabIndex = 44;
+            this.radioButton_MT3.Text = "MT3";
+            this.radioButton_MT3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButton_MT2);
+            this.groupBox1.Controls.Add(this.radioButton_MT3);
+            this.groupBox1.Location = new System.Drawing.Point(411, 78);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(82, 44);
+            this.groupBox1.TabIndex = 45;
+            this.groupBox1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(505, 272);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button_SetMT2Pos);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.textBox_MT2ｄZT);
@@ -567,6 +604,8 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.panel1.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -621,6 +660,9 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button button_SetMT2Pos;
         private System.Windows.Forms.Timer timerDisp;
+        private System.Windows.Forms.RadioButton radioButton_MT2;
+        private System.Windows.Forms.RadioButton radioButton_MT3;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 
