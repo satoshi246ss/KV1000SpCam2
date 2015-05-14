@@ -146,6 +146,11 @@ namespace KV1000SpCam
                 kv_pid_data.mt2_wide_az   = kpdr.mt2_wide_az;
                 kv_pid_data.mt2_wide_alt  = kpdr.mt2_wide_alt;
                 kv_pid_data.mt2_wide_vk   = kpdr.mt2_wide_vk;
+
+                label_MT2wide_f.Text = kv_pid_data.mt2_wide_id.ToString();
+                label_MT2wide_daz.Text = kv_pid_data.mt2_wide_az.ToString();
+                label_MT2wide_dalt.Text = kv_pid_data.mt2_wide_alt.ToString();
+                label_MT2wide_vk.Text = kv_pid_data.mt2_wide_vk.ToString();
             }
             if (kpdr.wide_id != 0)
             {

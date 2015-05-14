@@ -245,6 +245,29 @@ namespace KV1000SpCam
             gch.Free();
         }
 
+         /// <summary>
+         /// UInt32 -> UShort_U, UShort_L 分解
+         /// </summary>
+         public void TUInt2UShortUShor(UInt32 pos, out UInt16 pos_U, out UInt16 pos_L)
+         {
+             pos_U = (UInt16)( pos >> 16 );  // >>16 ->1/256*256
+             pos_L = (UInt16)( pos &  Convert.ToUInt32("FFFF", 16) );
+         }
+         /// <summary>
+         /// UInt32 -> UShort_U 分解
+         /// </summary>
+         public UInt16 TUInt2UShort_U(UInt32 pos)
+         {
+             return (UInt16)(pos >> 16);  // >>16 ->1/256*256
+         }
+         /// <summary>
+         /// UInt32 -> UShort_U 分解
+         /// </summary>
+         public UInt16 TUInt2UShort_L(UInt32 pos)
+         {
+             return (UInt16)(pos & Convert.ToUInt32("FFFF", 16));
+         }
+
         /// <summary>
         /// KV1000用byte列に変換　エンディアンも違う
         /// </summary>
@@ -257,6 +280,24 @@ namespace KV1000SpCam
             Marshal.Copy(ptr, bytes, 0, size);
             Marshal.FreeHGlobal(ptr);
             return bytes;
+        }
+        /// <summary>
+        /// KV1000用 エンディアン変換
+        /// </summary>
+        public Int32 EndianChange(Int32 obj)
+        {
+            byte[] bytes = (BitConverter.GetBytes(obj));
+            Array.Reverse(bytes);
+            return BitConverter.ToInt32(bytes, 0);
+        }
+        /// <summary>
+        /// KV1000用 エンディアン変換
+        /// </summary>
+        public UInt32 EndianChange(UInt32 obj)
+        {
+            byte[] bytes = (BitConverter.GetBytes(obj));
+            Array.Reverse(bytes);
+            return BitConverter.ToUInt32(bytes, 0);
         }
         /// <summary>
         /// KV1000用 エンディアン変換

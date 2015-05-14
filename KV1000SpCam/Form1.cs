@@ -61,10 +61,10 @@ namespace KV1000SpCam
 
             //バインドするローカルポート番号
             int localPort = mmFsiUdpPortKV1000SpCam2; //  24410;// broadcast mmFsiUdpPortMT3IDS2;
-            System.Net.Sockets.UdpClient udpc = null; ;
+            System.Net.Sockets.UdpClient udpc3 = null; ;
             try
             {
-                udpc = new System.Net.Sockets.UdpClient(localPort);
+                udpc3 = new System.Net.Sockets.UdpClient(localPort);
             }
             catch (Exception ex)
             {
@@ -92,7 +92,7 @@ namespace KV1000SpCam
             while (bw.CancellationPending == false)
             {
                 //データを受信する
-                byte[] rcvBytes = udpc.Receive(ref remoteEP);
+                byte[] rcvBytes = udpc3.Receive(ref remoteEP);
 
                 if (remoteEP.Address.ToString() == remoteHost && remoteEP.Port == remotePort )
                 {
@@ -118,13 +118,13 @@ namespace KV1000SpCam
                     byte[] sendBytes = enc.GetBytes(sendMsg);
 
                     //リモートホストを指定してデータを送信する
-                    udpc.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
+                    udpc3.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
                     cmd_str_f = 0;
                 }
             }
 
             //UDP接続を終了
-         //   udpc.Close();
+            udpc3.Close();
         }
         #endregion
 
@@ -291,6 +291,17 @@ namespace KV1000SpCam
             z_correct(mt2az, mt2alt, mt2zaz, mt2zdt, out az_zc, out alt_zc);
             string s = string.Format("Az:{0,0:F2}, {1,0:F2}  {2,0:F2}, {3,0:F2}  ans:{4,0:F2}, {5,0:F2}\n", mt2az, mt2alt, mt2zaz, mt2zdt, az_zc, alt_zc);
             richTextBox1.AppendText(s);
+
+            UInt32 xpos = 180000;
+            UInt32 ypos = 90000;
+            UInt32 xpos_kv = udpkv.EndianChange(xpos);
+            s = string.Format("xpos:{0}, {1}\n", xpos,xpos_kv);
+            
+            // DM6 Az,Alt位置決めデータ
+            string s1 = string.Format("WRS DM00006 4 {0:00000} {1:00000} {2:00000} {3:00000}\r",udpkv.TUInt2UShort_L(xpos),udpkv.TUInt2UShort_U(xpos),udpkv.TUInt2UShort_L(ypos),udpkv.TUInt2UShort_U(ypos));
+            Send_R_ON_cmd_KV1000(s1);
+
+            richTextBox1.AppendText(s1);
         }
 
         private void timerDisp_Tick(object sender, EventArgs e)
