@@ -110,7 +110,24 @@ namespace KV1000SpCam
                 udp_send_on = 1; // pid data 送信実行
                 Pid_Data_Set(kv_pid_data_r);
 
-                String rrstr = " w:"+kv_pid_data_r.wide_id.ToString()+" f:"+ kv_pid_data_r.fine_id.ToString()+" "+kv_pid_data_r.fine_az.ToString() ;
+                String rrstr="" ;
+                if (kv_pid_data_r.fine_id != 0)
+                {
+                    rrstr = " fine:" + kv_pid_data_r.fine_id.ToString() + " " + kv_pid_data_r.fine_az.ToString() + " " + kv_pid_data_r.fine_alt.ToString();
+                }
+                if (kv_pid_data_r.wide_id != 0)
+                {
+                    rrstr += " wide:" + kv_pid_data_r.wide_id.ToString() + " " + kv_pid_data_r.wide_az.ToString() + " " + kv_pid_data_r.wide_alt.ToString();
+                }
+                if (kv_pid_data_r.wide_id != 0)
+                {
+                    rrstr += " sf  :" + kv_pid_data_r.sf_id.ToString() + " " + kv_pid_data_r.sf_az.ToString() + " " + kv_pid_data_r.sf_alt.ToString();
+                }
+                if (kv_pid_data_r.mt2_wide_id != 0)
+                {
+                    rrstr += " MT2wide:" + kv_pid_data_r.mt2_wide_id.ToString() + " " + kv_pid_data_r.mt2_wide_az.ToString() + " " + kv_pid_data_r.mt2_wide_alt.ToString();
+                }
+                    
                 string s = "R:(" + rdat.Length + ")" + ipAny.Address + "(" + ipAny.Port.ToString() + ")";
                 rstr = LogString(rrstr, s);
                 Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, rstr });
@@ -147,10 +164,6 @@ namespace KV1000SpCam
                 kv_pid_data.mt2_wide_alt  = kpdr.mt2_wide_alt;
                 kv_pid_data.mt2_wide_vk   = kpdr.mt2_wide_vk;
 
-                label_MT2wide_f.Text = kv_pid_data.mt2_wide_id.ToString();
-                label_MT2wide_daz.Text = kv_pid_data.mt2_wide_az.ToString();
-                label_MT2wide_dalt.Text = kv_pid_data.mt2_wide_alt.ToString();
-                label_MT2wide_vk.Text = kv_pid_data.mt2_wide_vk.ToString();
             }
             if (kpdr.wide_id != 0)
             {
@@ -278,6 +291,12 @@ namespace KV1000SpCam
             string s2 = LogString(s1, s);
           //  this.Invoke(new dlgSetString(ShowLabelText), new object[] { label_UdpSendData, s2 });
           //  this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
+            // data clear
+
+            kv_pid_data.sf_id = 0;
+            kv_pid_data.wide_id = 0;
+            kv_pid_data.fish_id = 0;
+            kv_pid_data.mt2_wide_id = 0;
         }
 
         /// <summary>
