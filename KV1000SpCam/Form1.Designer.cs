@@ -79,6 +79,7 @@
             this.radioButton_MT2 = new System.Windows.Forms.RadioButton();
             this.radioButton_MT3 = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.timerMTmonSend = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -552,6 +553,12 @@
             this.groupBox1.TabIndex = 45;
             this.groupBox1.TabStop = false;
             // 
+            // timerMTmonSend
+            // 
+            this.timerMTmonSend.Enabled = true;
+            this.timerMTmonSend.Interval = 5000;
+            this.timerMTmonSend.Tick += new System.EventHandler(this.timerMTmonSend_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -663,6 +670,7 @@
         private System.Windows.Forms.RadioButton radioButton_MT2;
         private System.Windows.Forms.RadioButton radioButton_MT3;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Timer timerMTmonSend;
     }
 }
 

@@ -32,6 +32,9 @@ namespace KV1000SpCam
 
         FSI_PID_DATA pid_data = new FSI_PID_DATA();
         MT_MONITOR_DATA mtmon_data = new MT_MONITOR_DATA();
+        int mt_mon_id = 13;
+        int id_mon = 0;
+        int id = 0 ;
         int mmFsiUdpPortKV1000SpCam2 = 24426; //24410;            // MT3IDS （受信）
         int mmFsiUdpPortKV1000SpCam2s = 24427; //24426;            // MT3IDS （送信）
         int mmFsiUdpPortMTmonitor = 24415;
@@ -40,6 +43,7 @@ namespace KV1000SpCam
         string mmFsiSC440 = "192.168.1.206";
         System.Net.Sockets.UdpClient udpc = null;
         System.Net.Sockets.UdpClient udpc2 = null;
+        StreamWriter writer;
         DriveInfo cDrive = new DriveInfo("C");
         long diskspace;
 
@@ -54,6 +58,7 @@ namespace KV1000SpCam
 
         public String rstr;
         delegate void dlgSetString(object lbl, string text);
+
         //デリゲートで別スレッドから呼ばれてラベルに現在の時間又は
         //ストップウオッチの時間を表示する
         private void ShowRText(object sender, string str)
@@ -62,6 +67,11 @@ namespace KV1000SpCam
             rtb.Focus();
             rtb.AppendText(str);
         }
+        private void ShowFileWriterText(object sender, string str)
+        {
+            StreamWriter rtb = (StreamWriter)sender;　//objectをキャストする
+            rtb.WriteLine(str);
+        }
         private void ShowLabelText(object sender, string str)
         {
             Label rtb = (Label)sender;　//objectをキャストする
@@ -69,6 +79,11 @@ namespace KV1000SpCam
             rtb.Text = str;
         }
 
+        private void ShowRTextFW(string s)
+        {
+            Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s });
+            Invoke(new dlgSetString(ShowFileWriterText), new object[] { writer, s });
+        }
         /// <summary>
         /// 非同期受信に成功した場合に呼び出されます。
         /// </summary>
@@ -97,6 +112,7 @@ namespace KV1000SpCam
             {
                 udpkv.set_udp_kv_data(rdat, ref kd);
                 udpkv.cal_mt3(kd);
+                id++;
                 //Invoke(new dlgSetString(ShowLabelText), new object[] { label_x2pos, udpkv.x2pos.ToString() });
                 //Invoke(new dlgSetString(ShowLabelText), new object[] { label_y2pos, udpkv.y2pos.ToString() });
             }
@@ -130,15 +146,16 @@ namespace KV1000SpCam
                     
                 string s = "R:(" + rdat.Length + ")" + ipAny.Address + "(" + ipAny.Port.ToString() + ")";
                 rstr = LogString(rrstr, s);
-                Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, rstr });
+                //Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, rstr });
+                ShowRTextFW(rstr);
             }
             else // それ以外
             {
                 String rrstr = System.Text.Encoding.GetEncoding("SHIFT-JIS").GetString(rdat);
                 string s = "R:(" + rdat.Length +")"+ ipAny.Address + "(" + ipAny.Port.ToString() + ")";
                 rstr = LogString(rrstr, s);
-                Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, rstr });
-                //MessageBox.Show(rstr);
+                ShowRTextFW(rstr);
+                //Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, rstr });
             }
             // 連続で(複数回)データ受信する為の再設定
             ((System.Net.Sockets.UdpClient)AR.AsyncState).BeginReceive(ReceiveCallback, AR.AsyncState);
@@ -283,7 +300,8 @@ namespace KV1000SpCam
             catch (Exception ex)
             {
                 //匿名デリゲートで表示する
-                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                ShowRTextFW(ex.ToString());
             }
             string s = "S:" + remoteHost + "(" + remotePort.ToString() + ")";
             string s1 = kv_pid_data.wide_id.ToString() + " " + kv_pid_data.wide_az.ToString() + " " + kv_pid_data.wide_alt.ToString() + " " + kv_pid_data.wide_vk.ToString();
@@ -321,11 +339,13 @@ namespace KV1000SpCam
             catch (Exception ex)
             {
                 //匿名デリゲートで表示する
-                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                ShowRTextFW(ex.ToString());
             }
             string s = "S:" + remoteHost + "(" + remotePort.ToString() + ")";
             string s2 = LogString(s1, s);
-            this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
+            //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
+            ShowRTextFW(s2);
         }
         /// <summary>
         /// PID cmd送信ルーチン(KV1000　上位リンク)
@@ -349,11 +369,13 @@ namespace KV1000SpCam
             catch (Exception ex)
             {
                 //匿名デリゲートで表示する
-                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                ShowRTextFW(ex.ToString());
             }
             string s = "S:" + remoteHost + "(" + remotePort.ToString() + ")";
             string s2 = LogString(s1, s);
-            this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
+            ShowRTextFW(s2);
+            //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, s2 });
         }
         /// <summary>
         /// 地平座標->方向余弦

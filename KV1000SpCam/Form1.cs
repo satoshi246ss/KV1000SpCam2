@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 //using System.Diagnostics;
@@ -36,13 +37,17 @@ namespace KV1000SpCam
             udpc.BeginReceive(ReceiveCallback, udpc);
 
             timeBeginPeriod(time_period);
+
+            string s = "KV1000SpCam_log1_" + DateTime.Today.ToString("dd") + ".txt";
+            Encoding sjisEnc = Encoding.GetEncoding("Shift_JIS");
+            writer = new StreamWriter(@"E:\log\" + s, true, sjisEnc);
         }
         private void Form1_Shown(object sender, EventArgs e)
         {
             starttime = Planet.ObsStartTime(DateTime.Now) - DateTime.Today;
             endtime = Planet.ObsEndTime(DateTime.Now) - DateTime.Today;
             string s = string.Format("ObsStart:{0},   ObsEnd:{1}\n", starttime, endtime);
-            richTextBox1.AppendText(s);
+            write_log(s);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -51,6 +56,12 @@ namespace KV1000SpCam
             // ソケットクローズ
             udpc.Close();
             udpc2.Close();
+            writer.Close();
+        }
+        private void write_log(string s)
+        {
+            richTextBox1.AppendText(s);
+            writer.WriteLine(s);
         }
 
         #region UDP
@@ -61,15 +72,16 @@ namespace KV1000SpCam
 
             //バインドするローカルポート番号
             int localPort = mmFsiUdpPortKV1000SpCam2; //  24410;// broadcast mmFsiUdpPortMT3IDS2;
-            System.Net.Sockets.UdpClient udpc3 = null; ;
+            System.Net.Sockets.UdpClient udpc4 = null; ;
             try
             {
-                udpc3 = new System.Net.Sockets.UdpClient(localPort);
+                udpc4 = new System.Net.Sockets.UdpClient(localPort);
             }
             catch (Exception ex)
             {
                 //匿名デリゲートで表示する
-                this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                ShowRTextFW(ex.ToString());
             }
 
             //文字コードを指定する
@@ -92,7 +104,7 @@ namespace KV1000SpCam
             while (bw.CancellationPending == false)
             {
                 //データを受信する
-                byte[] rcvBytes = udpc3.Receive(ref remoteEP);
+                byte[] rcvBytes = udpc4.Receive(ref remoteEP);
 
                 if (remoteEP.Address.ToString() == remoteHost && remoteEP.Port == remotePort )
                 {
@@ -101,13 +113,15 @@ namespace KV1000SpCam
 
                     string rcvMsg = enc.GetString(rcvBytes);
                     str = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + "受信したデータ:[" + rcvMsg + "]\n";
-                    this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
+                    ShowRTextFW(str);
+                    //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
                 }
                  else
                 {
                     string rcvMsg = enc.GetString(rcvBytes);
                     str = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + "送信元アドレス:{0}/ポート番号:{1}/Size:{2}\n" + remoteEP.Address + "/" + remoteEP.Port + "/" + rcvBytes.Length + "[" + rcvMsg + "]\n";
-                    this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
+                    ShowRTextFW(str);
+                    //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, str });
                 }
 
                 //データを送信する
@@ -118,13 +132,13 @@ namespace KV1000SpCam
                     byte[] sendBytes = enc.GetBytes(sendMsg);
 
                     //リモートホストを指定してデータを送信する
-                    udpc3.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
+                    udpc4.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
                     cmd_str_f = 0;
                 }
             }
 
             //UDP接続を終了
-            udpc3.Close();
+            udpc4.Close();
         }
         #endregion
 
@@ -134,11 +148,12 @@ namespace KV1000SpCam
 
             int idd = 32765;
             sw.Start();
-            for (short i = 0; i < 1000; i++)
+            for (short i = 0; i < 100; i++)
             {
                 idd++;
                 //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, idd });
-                Pid_Data_Set_Wide((short)((i & 32767)), +i / 1000.0,  - i / 1000.0, i/1000.0); // 32767 == 7FFF
+                ShowRTextFW(idd.ToString());
+                Pid_Data_Set_Wide((short)((i & 32767)), +i / 1000.0, -i / 1000.0, i / 1000.0); // 32767 == 7FFF
                 Pid_Data_Set_Fine((short)((i & 32767)), +i / 1000.0, -i / 1000.0, i / 1000.0); // 32767 == 7FFF
                 int j = i % 5;
                 if (j == 0) Pid_Data_Send_KV1000("192.168.1.11"); //UDP2 
@@ -152,7 +167,8 @@ namespace KV1000SpCam
             }
             sw.Stop();
             long millisec = sw.ElapsedMilliseconds;
-            this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, millisec.ToString()+"ms\n" });
+            //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, millisec.ToString()+"ms\n" });
+            ShowRTextFW(millisec.ToString() + "ms\n");
 
           //  Pid_Data_Send_cmd_KV1000((short)( 100 ), 32.765 , -32.765 ); // 32767 == 7FFF
 
@@ -260,12 +276,14 @@ namespace KV1000SpCam
             TimeSpan nowtime = DateTime.Now - DateTime.Today;
             //TimeSpan endtime = new TimeSpan(7, 0, 0);
             //TimeSpan starttime = new TimeSpan(18,05, 0); //17 3 0
+            string s = "KV1000SpCam_log_"+ DateTime.Today.ToString("dd") + ".txt";
 
             if (nowtime.CompareTo(endtime) >= 0 && nowtime.CompareTo(starttime) <= 0)
             {
                 // DayTime
                 if (this.States == Daytime && checkBoxObsAuto.Checked)
                 {
+                    richTextBox1.SaveFile(@"E:\log\"+s, RichTextBoxStreamType.PlainText);
                 }
                 this.States = Daytime;
             }
@@ -275,6 +293,7 @@ namespace KV1000SpCam
                 if (this.States == Daytime && checkBoxObsAuto.Checked)
                 {
                     System.Diagnostics.Process p = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2010\Projects\MT3Fine\PictureViewer\bin\Release\MT3Fine.exe""");
+                    System.Diagnostics.Process p2 = System.Diagnostics.Process.Start(@"""C:\Users\root\Source\Repos\MT3BaslerAce6403\PictureViewer\bin\Release\MT3BaslerAce.exe""", "/ID 7");
                 }
                 this.States = Nighttime;
             }
@@ -290,7 +309,7 @@ namespace KV1000SpCam
             double az_zc, alt_zc;
             z_correct(mt2az, mt2alt, mt2zaz, mt2zdt, out az_zc, out alt_zc);
             string s = string.Format("Az:{0,0:F2}, {1,0:F2}  {2,0:F2}, {3,0:F2}  ans:{4,0:F2}, {5,0:F2}\n", mt2az, mt2alt, mt2zaz, mt2zdt, az_zc, alt_zc);
-            richTextBox1.AppendText(s);
+            write_log(s);
 
             UInt32 xpos = 180000;
             UInt32 ypos = 90000;
@@ -301,7 +320,7 @@ namespace KV1000SpCam
             string s1 = string.Format("WRS DM00006 4 {0:00000} {1:00000} {2:00000} {3:00000}\r",udpkv.TUInt2UShort_L(xpos),udpkv.TUInt2UShort_U(xpos),udpkv.TUInt2UShort_L(ypos),udpkv.TUInt2UShort_U(ypos));
             Send_R_ON_cmd_KV1000(s1);
 
-            richTextBox1.AppendText(s1);
+            write_log(s);
         }
 
         private void timerDisp_Tick(object sender, EventArgs e)
@@ -313,6 +332,65 @@ namespace KV1000SpCam
             label_wide_daz.Text  = kv_pid_data_r.wide_az.ToString();
             label_wide_dalt.Text = kv_pid_data_r.wide_alt.ToString();
             label_wide_vk.Text   = kv_pid_data_r.wide_vk.ToString();
+        }
+
+        /// <summary>
+        /// MTmon status 送信ルーチン
+        /// </summary>
+        /// <remarks>
+        /// MTmon status send
+        /// </remarks>
+        private void MTmon_Data_Send(object sender)
+        {
+            // MTmon status for UDP
+            //データを送信するリモートホストとポート番号
+            string remoteHost = mmFsiCore_i5;
+            int remotePort = mmFsiUdpPortMTmonitor;
+            //送信するデータを読み込む
+            mtmon_data.id = (byte)mt_mon_id;
+            diskspace = cDrive.TotalFreeSpace;
+            mtmon_data.diskspace = (int)(diskspace / (1024 * 1024 * 1024));
+            if (id == id_mon)
+            {
+                mtmon_data.obs = (byte)0; // STOP;
+            }
+            else
+            {
+                mtmon_data.obs = (byte)this.States;
+            }
+            id_mon = id;
+            
+            // とりあえず
+            mtmon_data.obs = 2 ; 
+
+            byte[] sendBytes = ToBytes(mtmon_data);
+
+            try
+            {
+                //リモートホストを指定してデータを送信する
+                udpc2.Send(sendBytes, sendBytes.Length, remoteHost, remotePort);
+            }
+            catch (Exception ex)
+            {
+                //匿名デリゲートで表示する
+                //this.Invoke(new dlgSetString(ShowRText), new object[] { richTextBox1, ex.ToString() });
+                ShowRTextFW(ex.ToString());
+            }
+        }
+        static byte[] ToBytes(MT_MONITOR_DATA obj)
+        {
+            int size = Marshal.SizeOf(typeof(MT_MONITOR_DATA));
+            IntPtr ptr = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(obj, ptr, false);
+            byte[] bytes = new byte[size];
+            Marshal.Copy(ptr, bytes, 0, size);
+            Marshal.FreeHGlobal(ptr);
+            return bytes;
+        }
+
+        private void timerMTmonSend_Tick(object sender, EventArgs e)
+        {
+            MTmon_Data_Send(sender);
         }
 
 
