@@ -292,8 +292,9 @@ namespace KV1000SpCam
                 //NightTime
                 if (this.States == Daytime && checkBoxObsAuto.Checked)
                 {
-                    System.Diagnostics.Process p = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2010\Projects\MT3Fine\PictureViewer\bin\Release\MT3Fine.exe""");
+                    System.Diagnostics.Process p1 = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2010\Projects\MT3Fine\PictureViewer\bin\Release\MT3Fine.exe""");
                     System.Diagnostics.Process p2 = System.Diagnostics.Process.Start(@"""C:\Users\root\Source\Repos\MT3BaslerAce6403\PictureViewer\bin\Release\MT3BaslerAce.exe""", "/ID 7");
+                    System.Diagnostics.Process p3 = System.Diagnostics.Process.Start("C:\\Tool\\MagicSend.exe", "44-8A-5B-72-01-8A");
                 }
                 this.States = Nighttime;
             }
