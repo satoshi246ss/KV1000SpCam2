@@ -80,8 +80,11 @@
             this.radioButton_MT3 = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.timerMTmonSend = new System.Windows.Forms.Timer(this.components);
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelX1pos = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_test
@@ -99,9 +102,9 @@
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox1.Location = new System.Drawing.Point(0, 153);
+            this.richTextBox1.Location = new System.Drawing.Point(0, 319);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(505, 117);
+            this.richTextBox1.Size = new System.Drawing.Size(513, 117);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             // 
@@ -410,7 +413,7 @@
             // label_MT2wide_daz
             // 
             this.label_MT2wide_daz.AutoSize = true;
-            this.label_MT2wide_daz.Location = new System.Drawing.Point(207, 92);
+            this.label_MT2wide_daz.Location = new System.Drawing.Point(207, 90);
             this.label_MT2wide_daz.Name = "label_MT2wide_daz";
             this.label_MT2wide_daz.Size = new System.Drawing.Size(35, 12);
             this.label_MT2wide_daz.TabIndex = 31;
@@ -559,11 +562,28 @@
             this.timerMTmonSend.Interval = 5000;
             this.timerMTmonSend.Tick += new System.EventHandler(this.timerMTmonSend_Tick);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelX1pos});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 415);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(513, 23);
+            this.statusStrip1.TabIndex = 46;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabelX1pos
+            // 
+            this.toolStripStatusLabelX1pos.Name = "toolStripStatusLabelX1pos";
+            this.toolStripStatusLabelX1pos.Size = new System.Drawing.Size(162, 18);
+            this.toolStripStatusLabelX1pos.Text = "toolStripStatusLabelX1pos";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(505, 272);
+            this.ClientSize = new System.Drawing.Size(513, 438);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button_SetMT2Pos);
             this.Controls.Add(this.label11);
@@ -613,6 +633,8 @@
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -671,6 +693,8 @@
         private System.Windows.Forms.RadioButton radioButton_MT3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Timer timerMTmonSend;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelX1pos;
     }
 }
 

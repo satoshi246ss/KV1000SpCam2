@@ -292,7 +292,10 @@ namespace KV1000SpCam
                 //NightTime
                 if (this.States == Daytime && checkBoxObsAuto.Checked)
                 {
-                    System.Diagnostics.Process p1 = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2010\Projects\MT3Fine\PictureViewer\bin\Release\MT3Fine.exe""");
+                    //System.Diagnostics.Process p1 = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2010\Projects\MT3Fine\PictureViewer\bin\Release\MT3Fine.exe""");
+                    //"C:\Users\root\Documents\Visual Studio 2013\Projects\MT3BaslerAce640\PictureViewer\bin\Release\MT3BaslerAce.exe" /is 8
+                    System.Diagnostics.Process p1 = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2013\Projects\MT3BaslerAce640\PictureViewer\bin\Release\MT3BaslerAce.exe""", "/is 8");
+                    //System.Diagnostics.Process p2 = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2013\Projects\MT3BaslerAce640\PictureViewer\bin\Release\MT3BaslerAce.exe""", "/ID 7");
                     System.Diagnostics.Process p2 = System.Diagnostics.Process.Start(@"""C:\Users\root\Source\Repos\MT3BaslerAce6403\PictureViewer\bin\Release\MT3BaslerAce.exe""", "/ID 7");
                     System.Diagnostics.Process p3 = System.Diagnostics.Process.Start("C:\\Tool\\MagicSend.exe", "44-8A-5B-72-01-8A");
                 }
@@ -326,6 +329,9 @@ namespace KV1000SpCam
 
         private void timerDisp_Tick(object sender, EventArgs e)
         {
+            string s = string.Format("TC:[{0:D5}] MT2:({1:D5},{2:D5})v({3:D5},{4:D5}) MT3:({5:D5},{6:D5})v({7:D5},{8:D5})\n", udpkv.udp_time_code, udpkv.xpos, udpkv.ypos,udpkv.x1v,udpkv.y1v,udpkv.x2pos,udpkv.y2pos,udpkv.x2v,udpkv.y2v);
+            toolStripStatusLabelX1pos.Text = s;
+
             label_x2pos.Text = udpkv.x2pos.ToString();
             label_y2pos.Text = udpkv.y2pos.ToString();
 

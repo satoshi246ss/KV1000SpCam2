@@ -126,6 +126,7 @@ namespace KV1000SpCam
     public class Udp
     {
         public int x2pos, y2pos, x2v, y2v;
+        public int xpos, ypos, x1v, y1v;
         public UInt16 udp_time_code;
 
         /// <summary>
@@ -328,12 +329,19 @@ namespace KV1000SpCam
         /// </remarks>
         public void cal_mt3(KV_DATA kd)
         {
+            //MT3
             x2pos = (kd.xx2 << 16) + (kd.xx1 << 8) + kd.xx0; // <<16 ->256*256  <<8 ->256
             y2pos = (kd.yy2 << 16) + (kd.yy1 << 8) + kd.yy0; // <<16 ->256*256  <<8 ->256
             x2v = ((kd.v21 << 8) + kd.v20) << 6;
             y2v = ((kd.v23 << 8) + kd.v22) << 6;
             udp_time_code = EndianChange(kd.UdpTimeCode);
-/*
+            //MT2
+            xpos = ((kd.x1 << 8) + kd.x0) << 4; // <<16 ->256*256  <<8 ->256
+            ypos = ((kd.y1 << 8) + kd.y0) << 4; // <<16 ->256*256  <<8 ->256
+            x1v = ((kd.v11 << 8) + kd.v10) << 6;
+            y1v = ((kd.v13 << 8) + kd.v12) << 6;
+
+            /*
             kv_status = (UInt16)((kd.y3 << 8) + kd.y2);      //KV1000 DM503
             data_request = (UInt16)((kd.x3 << 8) + kd.x2);   //KV1000 DM499
             binStr_status = Convert.ToString(kv_status, 2);
@@ -369,7 +377,7 @@ namespace KV1000SpCam
 
             // センタリング中 完了時
             if (mt3state_center_pre != 0 && mt3state_center == 0) kalman_init_flag = 1;
-*/
+            */
         }
         #endregion
     }
