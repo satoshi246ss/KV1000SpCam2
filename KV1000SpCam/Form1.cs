@@ -269,7 +269,7 @@ namespace KV1000SpCam
         }
 
         /// <summary>
-        /// 観測時間にfine起動
+        /// 観測時刻にMTfine, Fish2 起動
         /// </summary>
         private void timerObsOnOff_Tick(object sender, EventArgs e)
         {
@@ -297,7 +297,8 @@ namespace KV1000SpCam
                     System.Diagnostics.Process p1 = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2013\Projects\MT3BaslerAce640\PictureViewer\bin\Release\MT3BaslerAce.exe""", "/is 8");
                     //System.Diagnostics.Process p2 = System.Diagnostics.Process.Start(@"""C:\Users\root\Documents\Visual Studio 2013\Projects\MT3BaslerAce640\PictureViewer\bin\Release\MT3BaslerAce.exe""", "/ID 7");
                     System.Diagnostics.Process p2 = System.Diagnostics.Process.Start(@"""C:\Users\root\Source\Repos\MT3BaslerAce6403\PictureViewer\bin\Release\MT3BaslerAce.exe""", "/ID 7");
-                    System.Diagnostics.Process p3 = System.Diagnostics.Process.Start("C:\\Tool\\MagicSend.exe", "44-8A-5B-72-01-8A");
+                    System.Diagnostics.Process p3 = System.Diagnostics.Process.Start("C:\\Tool\\MagicSend.exe", "44-8A-5B-72-01-8A"); //MJ34LL      ID 10,11
+                    System.Diagnostics.Process p6 = System.Diagnostics.Process.Start("C:\\Tool\\MagicSend.exe", "B4-B5-2F-CD-FF-E1"); //HP6300SFF-3 ID 1
                 }
                 this.States = Nighttime;
             }
